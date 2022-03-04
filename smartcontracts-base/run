@@ -1,0 +1,60 @@
+#!/bin/bash
+
+# This script gets contracts set up, then generates contract docs, then serves them.
+
+docs=no
+resume=no
+while true ; do
+	case "${1:-}" in
+	--docs)
+		docs=yes ; shift
+		;;
+	--resume)
+		resume=yes ; shift
+		;;
+	*)
+		[[ -z "$1" ]] && break
+		echo "Unrecognised argument: $1"
+		exit 1
+		;;
+	esac
+done
+
+if [[ "$resume" = no ]] ; then
+    # the 0.8.8 contracts must be deployed first since the VEGA ERC20 token address
+    # is needed for the deployment of the staking/vesting contracts
+	(cd contracts-solc-0.8.8 || exit; truffle migrate || exit "$?")
+	(cd contracts-solc-0.8.1 || exit; truffle migrate || exit "$?")
+else
+	echo "Resume mode: NOT running truffle migrate"
+fi
+
+docdir=/app/build/doc
+if [[ "$docs" = "yes" ]] ; then
+	pids=()
+	for jsonfile in $(find /app/build/contracts -name '*.json' |sort) ; do
+		contract="$(basename "$jsonfile")"
+		contract="${contract//.json/}"
+		d="$docdir/$contract"
+		mkdir -p "$d/files"
+		abi="$d/files/abi.json"
+		md="$d/index.md"
+		log="$d/.build.log"
+		jq .abi "$jsonfile" >"$abi"
+		npx @vegaprotocol/simple-abi-docgen "$abi" "$contract" 1>"$md" 2>"$log" &
+		pid="$!"
+		echo "Generating doc for $jsonfile in subprocess $pid"
+		pids+=("$pid")
+	done
+
+	for pid in "${pids[@]}" ; do
+		echo "Waiting for subprocess $pid ..."
+		wait "$pid"
+		code="$?"
+		if [[ "$code" != 0 ]] ; then
+			echo "Warning: Subprocess $pid finished with code $code. Continuing..."
+		fi
+	done
+fi
+
+echo "READY"
