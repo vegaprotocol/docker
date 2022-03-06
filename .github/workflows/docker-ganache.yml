@@ -1,21 +1,21 @@
-name: Docker / smartcontracts-base
+name: Docker / ganache
  
 on:
   push:
     branches: main
     paths:
-      - 'smartcontracts-base/version.json'
+      - 'ganache/version.json'
   pull_request:
     paths:
-      - 'smartcontracts-base/**'
-      - '.github/workflows/docker-smartcontracts-base.yml'
+      - 'ganache/**'
+      - '.github/workflows/docker-ganache.yml'
 
 jobs:
   build_docker_image:
     uses: vegaprotocol/docker-public/.github/workflows/docker-generic.yml@main
     with:
-      image_name: smartcontracts-base
-      docker_context_path: ./smartcontracts-base
+      image_name: ganache
+      docker_context_path: ./ganache
       platforms: linux/amd64,linux/arm64,linux/ppc64le
     secrets:
       dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
