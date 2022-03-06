@@ -11,12 +11,24 @@ on:
       - '.github/workflows/docker-ganache.yml'
 
 jobs:
-  build_docker_image:
+  build_docker_image_amd64:
     uses: vegaprotocol/docker-public/.github/workflows/docker-generic.yml@main
     with:
       image_name: ganache
       docker_context_path: ./ganache
-      platforms: linux/amd64,linux/arm64,linux/ppc64le
+      platforms: linux/amd64
+    secrets:
+      dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
+      dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
+
+  build_docker_image_arm64:
+    # Requires sequential build because it needs separated port listening on the host to finish the build up
+    needs: build_docker_image_amd64
+    uses: vegaprotocol/docker-public/.github/workflows/docker-generic.yml@main
+    with:
+      image_name: ganache
+      docker_context_path: ./ganache
+      platforms: linux/arm64
     secrets:
       dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
       dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
