@@ -5,55 +5,19 @@ on:
     branches: main
     paths:
       - 'smartcontracts-base/version.json'
+      - '.github/workflows/docker-smartcontracts-base.yml'
   pull_request:
     paths:
-      - 'smartcontracts-base/version.json'
+      - 'smartcontracts-base/**'
+      - '.github/workflows/docker-smartcontracts-base.yml'
 
 jobs:
-  main:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Set up QEMU
-      id: quemu
-      uses: docker/setup-qemu-action@v1
-
-    - name: Available platforms
-      run: echo ${{ steps.qemu.outputs.platforms }}
-
-    - name: Setup Docker Buildx
-      uses: docker/setup-buildx-action@v1
-
-    - name: Collect images data
-      id: tags
-      run: |
-        current=$(jq -r '(.name)+":"+(.version)' smartcontracts-base/version.json)
-        latest=$(jq -r '(.name)+":latest"' smartcontracts-base/version.json)
-        echo ::set-output name=current::${current}
-        echo ::set-output name=latest::${latest}
-
-    - name: Docker build
-      uses: docker/build-push-action@v2
-      with:
-        context: ./smartcontracts-base
-        file: ./smartcontracts-base/Dockerfile
-        platforms: linux/amd64,linux/arm64,linux/ppc64le
-        tags: ${{steps.tags.latest}}
-
-    - name: Login to DockerHub
-      if: github.event_name != 'pull_request'
-      uses: docker/login-action@v1
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-    - name: Docker push
-      if: github.event_name != 'pull_request'
-      uses: docker/build-push-action@v2
-      with:
-        context: ./smartcontracts-base
-        file: ./smartcontracts-base/Dockerfile
-        platforms: linux/amd64,linux/arm64,linux/ppc64le
-        push: true
-        tags: ${{steps.tags.current}},${{steps.tags.latest}}
-    
+  build_docker_image:
+    uses: vegaprotocol/docker-public/.github/workflows/docker-generic.yml@ganache-image
+    with:
+      image_name: smartcontracts-base
+      docker_context_path: ./smartcontracts-base
+      platforms: linux/amd64,linux/arm64,linux/ppc64le
+    secrets:
+      dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
+      dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
