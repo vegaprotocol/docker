@@ -15,6 +15,7 @@ docker run --name vega-eth-ganache vegaprotocol/ganache:latest ganache-cli \
     --chainId 1440 \
     --networkId 1441 \
     -h 0.0.0.0 \
+    -p 8545 \
 	-m "ozone access unlock valid olympic save include omit supply green clown session" \
 	--db /app/ganache-db
 ```
