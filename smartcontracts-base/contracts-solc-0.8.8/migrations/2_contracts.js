@@ -3,12 +3,10 @@ const crypto = require("crypto");
 const ethUtil = require("ethereumjs-util");
 const fs = require("fs");
 
-const ethers = require('ethers');
-
 const Base_Faucet_Token = artifacts.require("Base_Faucet_Token");
 const MultisigControl = artifacts.require("MultisigControl");
 const ERC20_Asset_Pool = artifacts.require("ERC20_Asset_Pool");
-const ERC20_Bridge_Logic = artifacts.require("ERC20_Bridge_Logic");
+const ERC20_Bridge_Logic_Restricted = artifacts.require("ERC20_Bridge_Logic_Restricted");
 
 function multisign(
   param_types,
@@ -65,9 +63,10 @@ async function list_asset_on_bridge(
   cfg,
   validator_privkeys
 ) {
+  // function list_asset(address asset_source, bytes32 vega_asset_id, uint256 lifetime_limit, uint256 withdraw_threshold, uint256 nonce, bytes memory signatures) public virtual;
   let ms = multisign(
-    ["address", "bytes32"],
-    [asset_address, cfg.vega_id],
+    ["address", "bytes32", "uint256", "uint256"],
+    [asset_address, cfg.vega_id, cfg.lifetime_limit, cfg.withdraw_threshold],
     "list_asset",
     bridge_instance.address,
     validator_privkeys
@@ -75,7 +74,9 @@ async function list_asset_on_bridge(
 
   return await bridge_instance.list_asset(
     asset_address,
-    cfg.vega_id,
+    cfg.vega_id, 
+    cfg.lifetime_limit, 
+    cfg.withdraw_threshold,
     ms.nonce,
     ms.sigs
   );
@@ -86,26 +87,18 @@ module.exports = async function (deployer) {
   await deployer.deploy(MultisigControl);
   await deployer.deploy(ERC20_Asset_Pool, MultisigControl.address);
   let erc20_bridge_1 = await deployer.deploy(
-    ERC20_Bridge_Logic,
-    ERC20_Asset_Pool.address,
-    MultisigControl.address
+    ERC20_Bridge_Logic_Restricted,
+    ERC20_Asset_Pool.address
   );
   let erc20_bridge_2 = await deployer.deploy(
-    ERC20_Bridge_Logic,
-    ERC20_Asset_Pool.address,
-    MultisigControl.address
+    ERC20_Bridge_Logic_Restricted,
+    ERC20_Asset_Pool.address
   );
   let erc20_asset_pool_instance = await ERC20_Asset_Pool.deployed();
-  const ganmacheMnemonic = process.env.GANACHE_MNEMONIC;
 
-  if (!ganmacheMnemonic || ganmacheMnemonic.length <= 0) {
-    console.log("Error: GANACHE_MNEMONIC env variable not set.")
-    process.exit(2);
-  }
-
-  const wallet = ethers.Wallet.fromMnemonic(ganmacheMnemonic)
-  let privkey = wallet.privateKey.substr(2);
-  let pubkey = wallet.address;
+  let privkey =
+    "adef89153e4bd6b43876045efdd6818cec359340683edaec5e8588e635e8428b";
+  let pubkey = "0xb89A165EA8b619c14312dB316BaAa80D2a98B493";
 
   let initial_validators = [Buffer.from(privkey, "hex")];
 
