@@ -5,7 +5,9 @@
     "decimals": 5,
     "total_supply_whole_tokens": "0",
     "faucet_amount": "100000",
-    "vega_id": "0x5cfa87844724df6069b94e4c8a6f03af21907d7bc251593d08e4251043ee9f7c"
+    "vega_id": "0x5cfa87844724df6069b94e4c8a6f03af21907d7bc251593d08e4251043ee9f7c",
+    "lifetime_limit": "10000000000000000000000",
+    "withdraw_threshold": "10000000000000000000000"
   },
   {
     "name": "DAI (local)",
@@ -13,7 +15,9 @@
     "decimals": 5,
     "total_supply_whole_tokens": "0",
     "faucet_amount": "10000000000",
-    "vega_id": "0x6d9d35f657589e40ddfb448b7ad4a7463b66efb307527fedd2aa7df1bbd5ea61"
+    "vega_id": "0x6d9d35f657589e40ddfb448b7ad4a7463b66efb307527fedd2aa7df1bbd5ea61",
+    "lifetime_limit": "10000000000000000000000",
+    "withdraw_threshold": "10000000000000000000000"
   },
   {
     "name": "EURO (local)",
@@ -21,7 +25,9 @@
     "decimals": 5,
     "total_supply_whole_tokens": "0",
     "faucet_amount": "10000000000",
-    "vega_id": "0x8b52d4a3a4b0ffe733cddbc2b67be273816cfeb6ca4c8b339bac03ffba08e4e4"
+    "vega_id": "0x8b52d4a3a4b0ffe733cddbc2b67be273816cfeb6ca4c8b339bac03ffba08e4e4",
+    "lifetime_limit": "10000000000000000000000",
+    "withdraw_threshold": "10000000000000000000000"
   },
   {
     "name": "USDC (local)",
@@ -29,7 +35,9 @@
     "decimals": 5,
     "total_supply_whole_tokens": "0",
     "faucet_amount": "10000000000",
-    "vega_id": "0x993ed98f4f770d91a796faab1738551193ba45c62341d20597df70fea6704ede"
+    "vega_id": "0x993ed98f4f770d91a796faab1738551193ba45c62341d20597df70fea6704ede",
+    "lifetime_limit": "10000000000000000000000",
+    "withdraw_threshold": "10000000000000000000000"
   },
   {
     "name": "Vega",
@@ -37,7 +45,9 @@
     "decimals": 18,
     "total_supply_whole_tokens": "64999723",
     "faucet_amount": "1000000000000000000",
-    "vega_id": "0xb4f2726571fbe8e33b442dc92ed2d7f0d810e21835b7371a7915a365f07ccd9b"
+    "vega_id": "0xb4f2726571fbe8e33b442dc92ed2d7f0d810e21835b7371a7915a365f07ccd9b",
+    "lifetime_limit": "10000000000000000000000",
+    "withdraw_threshold": "10000000000000000000000"
   },
   {
     "name": "Vega V1 (do not use)",
@@ -45,6 +55,8 @@
     "decimals": 18,
     "total_supply_whole_tokens": "64999723",
     "faucet_amount": "1000000000000000000",
-    "vega_id": "0xc1607f28ec1d0a0b36842c8327101b18de2c5f172585870912f5959145a9176c"
+    "vega_id": "0xc1607f28ec1d0a0b36842c8327101b18de2c5f172585870912f5959145a9176c",
+    "lifetime_limit": "10000000000000000000000",
+    "withdraw_threshold": "10000000000000000000000"
   }
 ]
