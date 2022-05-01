@@ -163,12 +163,23 @@ async function add_signers() {
       console.log("Added MultisigControl signer: " + cfg.new_signers[i]);
     }
 
+    // remove original signer so that only validators are on the
+    await remove_signer(
+      multisigcontrol_instance,
+      cfg.source.pubkey,
+      cfg.source.pubkey,
+      [Buffer.from(cfg.source.privkey, "hex")],
+      cfg.ethereum.gas,
+      cfg.ethereum.gasPrice
+    );
+    console.log("Removed MultisigControl signer: " + cfg.source.pubkey);
+
     // Finally, set the threshold to the proper value
     await set_threshold(
       multisigcontrol_instance,
       500, // 0 < threshold <= 1000
       cfg.source.pubkey,
-      [Buffer.from(cfg.source.privkey, "hex")],
+      [Buffer.from(cfg.new_priv_signers[0], "hex")],
       cfg.ethereum.gas,
       cfg.ethereum.gasPrice
     );

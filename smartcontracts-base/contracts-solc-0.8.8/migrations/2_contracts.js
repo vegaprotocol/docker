@@ -96,9 +96,16 @@ module.exports = async function (deployer) {
   );
   let erc20_asset_pool_instance = await ERC20_Asset_Pool.deployed();
 
-  let privkey =
-    "adef89153e4bd6b43876045efdd6818cec359340683edaec5e8588e635e8428b";
-  let pubkey = "0xb89A165EA8b619c14312dB316BaAa80D2a98B493";
+  const ganmacheMnemonic = process.env.GANACHE_MNEMONIC;
+
+  if (!ganmacheMnemonic || ganmacheMnemonic.length <= 0) {
+    console.log("Error: GANACHE_MNEMONIC env variable not set.")
+    process.exit(2);
+  }
+
+  const wallet = ethers.Wallet.fromMnemonic(ganmacheMnemonic)
+  let privkey = wallet.privateKey.substr(2);
+  let pubkey = wallet.address;
 
   let initial_validators = [Buffer.from(privkey, "hex")];
 
