@@ -51,12 +51,11 @@ jobs:
         username: ${{ secrets.dockerhub_username }}
         password: ${{ secrets.dockerhub_token }}
 
-
     - name: Docker build
       uses: docker/build-push-action@v2
       with:
         context: ${{ inputs.docker_context_path }}
         file: "${{ inputs.docker_context_path }}/Dockerfile"
         platforms: ${{ inputs.platforms }}
-        tags: ${{ steps.tags.outputs.latest }}
+        tags: ${{ steps.tags.outputs.latest }},${{ steps.tags.outputs.current }}
         push: ${{ github.event_name != 'pull_request' }}
