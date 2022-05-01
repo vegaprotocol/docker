@@ -26,5 +26,5 @@ nohup \
             -m \"${GANACHE_MNEMONIC}\" \
             --db /app/ganache-db \
             -h 0.0.0.0 \
-            -p 8545 &" \
+            -p \"${GANACHE_PORT}\" &" \
     && GANACHE_MNEMONIC="${GANACHE_MNEMONIC}" GANACHE_HOSTNAME="127.0.0.1" GANACHE_PORT="${GANACHE_PORT}" ./run
