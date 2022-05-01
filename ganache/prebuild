@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# It's a bit tricky to build ganache images for multiple architectures. Ganache opens ports by default it is port 8545. 
+# For multiple architectures, docker starts all of the build processes at the same time, so it means we need to open 
+# different ports for multiple architectures.
+
+: "${TARGETARCH:=amd64}"
+: "${GANACHE_MNEMONIC:=}"
+
+GANACHE_PORT="8545"
+
+case $TARGETARCH in
+    "amd64")
+        GANACHE_PORT="8545"
+        ;;
+    "arm64")
+        GANACHE_PORT="8546"
+        ;;
+esac
+
+nohup \
+        bash -c "ganache-cli \
+            --blockTime 1 \
+            --chainId 1440 \
+            --networkId 1441 \
+            -m \"${GANACHE_MNEMONIC}\" \
+            --db /app/ganache-db \
+            -h 0.0.0.0 \
+            -p 8545 &" \
+    && GANACHE_MNEMONIC="${GANACHE_MNEMONIC}" GANACHE_HOSTNAME="127.0.0.1" GANACHE_PORT="${GANACHE_PORT}" ./run
