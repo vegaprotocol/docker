@@ -2,6 +2,7 @@ const abi = require("ethereumjs-abi");
 const crypto = require("crypto");
 const ethUtil = require("ethereumjs-util");
 const fs = require("fs");
+const ethers = require('ethers');
 
 const Base_Faucet_Token = artifacts.require("Base_Faucet_Token");
 const MultisigControl = artifacts.require("MultisigControl");
