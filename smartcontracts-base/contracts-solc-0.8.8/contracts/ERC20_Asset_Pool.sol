@@ -8,7 +8,6 @@ import "./IERC20.sol";
 /// @author Vega Protocol
 /// @notice This contract is the target for all deposits to the ERC20 Bridge via ERC20_Bridge_Logic
 contract ERC20_Asset_Pool {
-
     event Multisig_Control_Set(address indexed new_address);
     event Bridge_Address_Set(address indexed new_address);
 
@@ -27,7 +26,7 @@ contract ERC20_Asset_Pool {
 
     /// @notice this contract is not intended to accept ether directly
     receive() external payable {
-      revert("this contract does not accept ETH");
+        revert("this contract does not accept ETH");
     }
 
     /// @param new_address The new MultisigControl contract address.
@@ -35,10 +34,19 @@ contract ERC20_Asset_Pool {
     /// @param signatures Vega-supplied signature bundle of a validator-signed set_multisig_control order
     /// @notice See MultisigControl for more about signatures
     /// @notice Emits Multisig_Control_Set event
-    function set_multisig_control(address new_address, uint256 nonce, bytes memory signatures) public {
-        require(new_address != address(0));
-        bytes memory message = abi.encode(new_address, nonce, 'set_multisig_control');
-        require(IMultisigControl(multisig_control_address).verify_signatures(signatures, message, nonce), "bad signatures");
+    function set_multisig_control(
+        address new_address,
+        uint256 nonce,
+        bytes memory signatures
+    ) public {
+        require(new_address != address(0), "invalid MultisigControl address");
+        require(is_contract(new_address), "new address must be contract");
+
+        bytes memory message = abi.encode(new_address, nonce, "set_multisig_control");
+        require(
+            IMultisigControl(multisig_control_address).verify_signatures(signatures, message, nonce),
+            "bad signatures"
+        );
         multisig_control_address = new_address;
         emit Multisig_Control_Set(new_address);
     }
@@ -48,9 +56,16 @@ contract ERC20_Asset_Pool {
     /// @param signatures Vega-supplied signature bundle of a validator-signed set_bridge_address order
     /// @notice See MultisigControl for more about signatures
     /// @notice Emits Bridge_Address_Set event
-    function set_bridge_address(address new_address, uint256 nonce, bytes memory signatures) public {
-        bytes memory message = abi.encode(new_address, nonce, 'set_bridge_address');
-        require(IMultisigControl(multisig_control_address).verify_signatures(signatures, message, nonce), "bad signatures");
+    function set_bridge_address(
+        address new_address,
+        uint256 nonce,
+        bytes memory signatures
+    ) public {
+        bytes memory message = abi.encode(new_address, nonce, "set_bridge_address");
+        require(
+            IMultisigControl(multisig_control_address).verify_signatures(signatures, message, nonce),
+            "bad signatures"
+        );
         erc20_bridge_address = new_address;
         emit Bridge_Address_Set(new_address);
     }
@@ -60,27 +75,31 @@ contract ERC20_Asset_Pool {
     /// @param target Target Ethereum address that the ERC20 tokens will be sent to
     /// @param amount Amount of ERC20 tokens to withdraw
     /// @dev amount is in whatever the lowest decimal value the ERC20 token has. For instance, an 18 decimal ERC20 token, 1 "amount" == 0.000000000000000001
-    /// @return true if transfer was successful.
-    function withdraw(address token_address, address target, uint256 amount) public returns(bool) {
+    function withdraw(
+        address token_address,
+        address target,
+        uint256 amount
+    ) public {
         require(msg.sender == erc20_bridge_address, "msg.sender not authorized bridge");
+        require(is_contract(token_address), "token_address must be contract");
 
-        IERC20(token_address).transfer(target, amount);
-        /// @dev the following is a test for non-standard ERC20 tokens IE ones without a return value
-        bool result;
+        (bool success, bytes memory returndata) = token_address.call(
+            abi.encodeWithSignature("transfer(address,uint256)", target, amount)
+        );
+        require(success, "token transfer failed");
+
+        if (returndata.length > 0) {
+            // Return data is optional
+            require(abi.decode(returndata, (bool)), "token transfer failed");
+        }
+    }
+
+    function is_contract(address addr) internal view returns (bool) {
+        uint256 code_size;
         assembly {
-           switch returndatasize()
-               case 0 {                      // no return value but didn't revert
-                   result := true
-               }
-               case 32 {                     // standard ERC20, has return value
-                   returndatacopy(0, 0, 32)
-                   result := mload(0)        // result is result of transfer call
-               }
-               default {}
-       }
-       require(result, "token transfer failed"); // revert() if result is false
-
-      return true;
+            code_size := extcodesize(addr)
+        }
+        return code_size > 0;
     }
 }
 
