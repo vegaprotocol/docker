@@ -1,0 +1,25 @@
+{
+  "name": "smartcontracts",
+  "version": "1.0.0",
+  "description": "smartcontracts",
+  "main": "",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "@truffle/hdwallet-provider": "^1.2.2",
+    "web3": "^1.3.4"
+  },
+  "devDependencies": {},
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vegaprotocol/devops-infra.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vegaprotocol/devops-infra/issues"
+  },
+  "homepage": "https://github.com/vegaprotocol/devops-infra"
+}

@@ -16,23 +16,25 @@ contract Base_Faucet_Token is ERC20Detailed, Ownable, ERC20, Killable {
     using SafeMath for uint256;
     uint256 _faucet_amount;
     constructor (string memory _name, string memory _symbol, uint8 _decimals, uint256 total_supply_whole_tokens, uint256 faucet_amount) ERC20Detailed(_name, _symbol, _decimals) {
-        uint256 to_mint = total_supply_whole_tokens * (10**uint256(_decimals));
+        uint256 to_issue = total_supply_whole_tokens * (10**uint256(_decimals));
+
         _faucet_amount = faucet_amount;
-        _totalSupply = to_mint;
-        _balances[address(this)] = to_mint;
-        emit Transfer(address(0), address(this), to_mint);
+        // Mint some tokens to the contract
+        _mint(address(this), to_issue);
+        // Issue 10% of tokens to the contract owner. Makes developers life simpler.
+        issue(address(msg.sender), to_issue / 10);
     }
 
     // user => last faucet
-    mapping(address => uint256) last_faucets;
+    // mapping(address => uint256) last_faucets;
+
     // mints and transfers _faucet_amount to the sender
-    // limited to once per 24 hours
+    // limited to once per 24 hours - WHY?(!)
     function faucet() public {
-        require(last_faucets[msg.sender] + 86400 <= block.timestamp, "must wait 24 hours between faucet calls");
-        last_faucets[msg.sender] = block.timestamp;
-        _totalSupply = _totalSupply.add(_faucet_amount);
-        _balances[address(msg.sender)] = _balances[address(msg.sender)].add(_faucet_amount);
-        emit Transfer(address(0), address(msg.sender), _faucet_amount);
+        // require(last_faucets[msg.sender] + 86400 <= block.timestamp, "must wait 24 hours between faucet calls");
+        // last_faucets[msg.sender] = block.timestamp;
+
+        _mint(address(msg.sender), _faucet_amount);
     }
 
     function issue(address account, uint256 value) public onlyOwner {
