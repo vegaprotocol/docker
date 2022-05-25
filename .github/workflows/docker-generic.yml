@@ -13,6 +13,10 @@ on:
       platforms:
         required: true
         type: string
+      upload_artifact:
+        required: false
+        default: false
+        type: boolean
 
     secrets:
       dockerhub_username:
@@ -59,3 +63,11 @@ jobs:
         platforms: ${{ inputs.platforms }}
         tags: ${{ steps.tags.outputs.latest }},${{ steps.tags.outputs.current }}
         push: ${{ github.event_name != 'pull_request' }}
+        outputs: type=local,dest=/tmp/docker-image.tar
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: docker_image
+        path: /tmp/docker-image.tar
+      if: inputs.upload_artifact
