@@ -38,7 +38,7 @@ contract ERC20_Asset_Pool {
         address new_address,
         uint256 nonce,
         bytes memory signatures
-    ) public {
+    ) external {
         require(new_address != address(0), "invalid MultisigControl address");
         require(is_contract(new_address), "new address must be contract");
 
@@ -60,7 +60,7 @@ contract ERC20_Asset_Pool {
         address new_address,
         uint256 nonce,
         bytes memory signatures
-    ) public {
+    ) external {
         bytes memory message = abi.encode(new_address, nonce, "set_bridge_address");
         require(
             IMultisigControl(multisig_control_address).verify_signatures(signatures, message, nonce),
@@ -79,7 +79,7 @@ contract ERC20_Asset_Pool {
         address token_address,
         address target,
         uint256 amount
-    ) public {
+    ) external {
         require(msg.sender == erc20_bridge_address, "msg.sender not authorized bridge");
         require(is_contract(token_address), "token_address must be contract");
 

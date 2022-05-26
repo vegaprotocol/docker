@@ -25,7 +25,7 @@ abstract contract IMultisigControl {
         uint16 new_threshold,
         uint256 nonce,
         bytes calldata signatures
-    ) public virtual;
+    ) external virtual;
 
     /// @notice Adds new valid signer and adjusts signer count.
     /// @param new_signer New signer address
@@ -37,7 +37,7 @@ abstract contract IMultisigControl {
         address new_signer,
         uint256 nonce,
         bytes calldata signatures
-    ) public virtual;
+    ) external virtual;
 
     /// @notice Removes currently valid signer and adjusts signer count.
     /// @param old_signer Address of signer to be removed.
@@ -49,14 +49,14 @@ abstract contract IMultisigControl {
         address old_signer,
         uint256 nonce,
         bytes calldata signatures
-    ) public virtual;
+    ) external virtual;
 
     /// @notice Burn an nonce before it gets used by a user. Useful in case the validators needs to prevents a malicious user to do un-permitted action.
     /// @param nonce Vega-assigned single-use number that provides replay attack protection
     /// @param signatures Vega-supplied signature bundle of a validator-signed order
     /// @notice See MultisigControl for more about signatures
     /// @dev Emits 'NonceBurnt' event
-    function burn_nonce(uint256 nonce, bytes calldata signatures) public virtual;
+    function burn_nonce(uint256 nonce, bytes calldata signatures) external virtual;
 
     /// @notice Verifies a signature bundle and returns true only if the threshold of valid signers is met,
     /// @notice this is a function that any function controlled by Vega MUST call to be securely controlled by the Vega network
@@ -74,18 +74,18 @@ abstract contract IMultisigControl {
 
     /**********************VIEWS*********************/
     /// @return Number of valid signers
-    function get_valid_signer_count() public view virtual returns (uint8);
+    function get_valid_signer_count() external view virtual returns (uint8);
 
     /// @return Current threshold
-    function get_current_threshold() public view virtual returns (uint16);
+    function get_current_threshold() external view virtual returns (uint16);
 
     /// @param signer_address target potential signer address
     /// @return true if address provided is valid signer
-    function is_valid_signer(address signer_address) public view virtual returns (bool);
+    function is_valid_signer(address signer_address) external view virtual returns (bool);
 
     /// @param nonce Nonce to lookup
     /// @return true if nonce has been used
-    function is_nonce_used(uint256 nonce) public view virtual returns (bool);
+    function is_nonce_used(uint256 nonce) external view virtual returns (bool);
 }
 
 /**

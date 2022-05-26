@@ -40,7 +40,7 @@ abstract contract IERC20_Bridge_Logic_Restricted {
         uint256 withdraw_threshold,
         uint256 nonce,
         bytes memory signatures
-    ) public virtual;
+    ) external virtual;
 
     /// @notice This function removes from listing the given ERC20 token contract. This marks the token as invalid for deposit to this bridge
     /// @param asset_source Contract address for given ERC20 token
@@ -52,7 +52,7 @@ abstract contract IERC20_Bridge_Logic_Restricted {
         address asset_source,
         uint256 nonce,
         bytes memory signatures
-    ) public virtual;
+    ) external virtual;
 
     /// @notice This function sets the lifetime maximum deposit for a given asset
     /// @param asset_source Contract address for given ERC20 token
@@ -66,7 +66,7 @@ abstract contract IERC20_Bridge_Logic_Restricted {
         uint256 threshold,
         uint256 nonce,
         bytes calldata signatures
-    ) public virtual;
+    ) external virtual;
 
     /// @notice This function sets the withdraw delay for withdrawals over the per-asset set thresholds
     /// @param delay Amount of time to delay a withdrawal
@@ -76,31 +76,31 @@ abstract contract IERC20_Bridge_Logic_Restricted {
         uint256 delay,
         uint256 nonce,
         bytes calldata signatures
-    ) public virtual;
+    ) external virtual;
 
     /// @notice This function triggers the global bridge stop that halts all withdrawals and deposits until it is resumed
     /// @param nonce Vega-assigned single-use number that provides replay attack protection
     /// @param signatures Vega-supplied signature bundle of a validator-signed order
     /// @dev bridge must not be stopped already
     /// @dev MUST emit Bridge_Stopped if successful
-    function global_stop(uint256 nonce, bytes calldata signatures) public virtual;
+    function global_stop(uint256 nonce, bytes calldata signatures) external virtual;
 
     /// @notice This function resumes bridge operations from the stopped state
     /// @param nonce Vega-assigned single-use number that provides replay attack protection
     /// @param signatures Vega-supplied signature bundle of a validator-signed order
     /// @dev bridge must be stopped
     /// @dev MUST emit Bridge_Resumed if successful
-    function global_resume(uint256 nonce, bytes calldata signatures) public virtual;
+    function global_resume(uint256 nonce, bytes calldata signatures) external virtual;
 
     /// @notice this function allows the exemption_lister to exempt a depositor from the deposit limits
     /// @notice this feature is specifically for liquidity and rewards providers
     /// @dev MUST emit Depositor_Exempted if successful
-    function exempt_depositor() public virtual;
+    function exempt_depositor() external virtual;
 
     /// @notice this function allows the exemption_lister to revoke a depositor's exemption from deposit limits
     /// @notice this feature is specifically for liquidity and rewards providers
     /// @dev MUST emit Depositor_Exemption_Revoked if successful
-    function revoke_exempt_depositor() public virtual;
+    function revoke_exempt_depositor() external virtual;
 
     /// @notice This function withdrawals assets to the target Ethereum address
     /// @param asset_source Contract address for given ERC20 token
@@ -118,12 +118,12 @@ abstract contract IERC20_Bridge_Logic_Restricted {
         uint256 creation,
         uint256 nonce,
         bytes memory signatures
-    ) public virtual;
+    ) external virtual;
 
     /// @notice this view returns true if the given despoitor address has been exempted from deposit limits
     /// @param depositor The depositor to check
     /// @return true if depositor is exempt
-    function is_exempt_depositor(address depositor) public view virtual returns (bool);
+    function is_exempt_depositor(address depositor) external view virtual returns (bool);
 
     /// @notice This function allows a user to deposit given ERC20 tokens into Vega
     /// @param asset_source Contract address for given ERC20 token
@@ -136,34 +136,34 @@ abstract contract IERC20_Bridge_Logic_Restricted {
         address asset_source,
         uint256 amount,
         bytes32 vega_public_key
-    ) public virtual;
+    ) external virtual;
 
     /***************************VIEWS*****************************/
     /// @notice This view returns true if the given ERC20 token contract has been listed valid for deposit
     /// @param asset_source Contract address for given ERC20 token
     /// @return True if asset is listed
-    function is_asset_listed(address asset_source) public view virtual returns (bool);
+    function is_asset_listed(address asset_source) external view virtual returns (bool);
 
     /// @notice This view returns the lifetime deposit limit for the given asset
     /// @param asset_source Contract address for given ERC20 token
     /// @return Lifetime limit for the given asset
-    function get_asset_deposit_lifetime_limit(address asset_source) public view virtual returns (uint256);
+    function get_asset_deposit_lifetime_limit(address asset_source) external view virtual returns (uint256);
 
     /// @notice This view returns the given token's withdraw threshold above which the withdraw delay goes into effect
     /// @param asset_source Contract address for given ERC20 token
     /// @return Withdraw threshold
-    function get_withdraw_threshold(address asset_source) public view virtual returns (uint256);
+    function get_withdraw_threshold(address asset_source) external view virtual returns (uint256);
 
     /// @return current multisig_control_address
-    function get_multisig_control_address() public view virtual returns (address);
+    function get_multisig_control_address() external view virtual returns (address);
 
     /// @param asset_source Contract address for given ERC20 token
     /// @return The assigned Vega Asset ID for given ERC20 token
-    function get_vega_asset_id(address asset_source) public view virtual returns (bytes32);
+    function get_vega_asset_id(address asset_source) external view virtual returns (bytes32);
 
     /// @param vega_asset_id Vega-assigned asset ID for which you want the ERC20 token address
     /// @return The ERC20 token contract address for a given Vega Asset ID
-    function get_asset_source(bytes32 vega_asset_id) public view virtual returns (address);
+    function get_asset_source(bytes32 vega_asset_id) external view virtual returns (address);
 }
 
 /**
