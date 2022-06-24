@@ -230,6 +230,19 @@
   },
   {
     "inputs": [],
+    "name": "erc20_asset_pool_address",
+    "outputs": [
+      {
+        "internalType": "address payable",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "exempt_depositor",
     "outputs": [],
     "stateMutability": "nonpayable",
