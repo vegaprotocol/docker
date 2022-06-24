@@ -11,7 +11,7 @@ import "./ERC20_Asset_Pool.sol";
 /// @notice This contract is used by Vega network users to deposit and withdraw ERC20 tokens to/from Vega.
 // @notice All funds deposited/withdrawn are to/from the assigned ERC20_Asset_Pool
 contract ERC20_Bridge_Logic_Restricted is IERC20_Bridge_Logic_Restricted {
-    address payable erc20_asset_pool_address;
+    address payable public erc20_asset_pool_address;
     // asset address => is listed
     mapping(address => bool) listed_tokens;
     // Vega asset ID => asset_source
@@ -46,7 +46,8 @@ contract ERC20_Bridge_Logic_Restricted is IERC20_Bridge_Logic_Restricted {
         uint256 withdraw_threshold,
         uint256 nonce,
         bytes memory signatures
-    ) public override {
+    ) external override {
+        require(asset_source != address(0), "invalid asset source");
         require(!listed_tokens[asset_source], "asset already listed");
         bytes memory message = abi.encode(
             asset_source,
@@ -78,7 +79,7 @@ contract ERC20_Bridge_Logic_Restricted is IERC20_Bridge_Logic_Restricted {
         address asset_source,
         uint256 nonce,
         bytes memory signatures
-    ) public override {
+    ) external override {
         require(listed_tokens[asset_source], "asset not listed");
         bytes memory message = abi.encode(asset_source, nonce, "remove_asset");
         require(
@@ -115,7 +116,7 @@ contract ERC20_Bridge_Logic_Restricted is IERC20_Bridge_Logic_Restricted {
         uint256 threshold,
         uint256 nonce,
         bytes calldata signatures
-    ) public override {
+    ) external override {
         require(listed_tokens[asset_source], "asset not listed");
         bytes memory message = abi.encode(asset_source, lifetime_limit, threshold, nonce, "set_asset_limits");
         require(
@@ -131,14 +132,14 @@ contract ERC20_Bridge_Logic_Restricted is IERC20_Bridge_Logic_Restricted {
     /// @notice This view returns the lifetime deposit limit for the given asset
     /// @param asset_source Contract address for given ERC20 token
     /// @return Lifetime limit for the given asset
-    function get_asset_deposit_lifetime_limit(address asset_source) public view override returns (uint256) {
+    function get_asset_deposit_lifetime_limit(address asset_source) external view override returns (uint256) {
         return asset_deposit_lifetime_limit[asset_source];
     }
 
     /// @notice This view returns the given token's withdraw threshold above which the withdraw delay goes into effect
     /// @param asset_source Contract address for given ERC20 token
     /// @return Withdraw threshold
-    function get_withdraw_threshold(address asset_source) public view override returns (uint256) {
+    function get_withdraw_threshold(address asset_source) external view override returns (uint256) {
         return withdraw_thresholds[asset_source];
     }
 
@@ -150,7 +151,7 @@ contract ERC20_Bridge_Logic_Restricted is IERC20_Bridge_Logic_Restricted {
         uint256 delay,
         uint256 nonce,
         bytes calldata signatures
-    ) public override {
+    ) external override {
         bytes memory message = abi.encode(delay, nonce, "set_withdraw_delay");
         require(
             IMultisigControl(multisig_control_address()).verify_signatures(signatures, message, nonce),
@@ -165,7 +166,7 @@ contract ERC20_Bridge_Logic_Restricted is IERC20_Bridge_Logic_Restricted {
     /// @param signatures Vega-supplied signature bundle of a validator-signed order
     /// @dev bridge must not be stopped already
     /// @dev emits Bridge_Stopped if successful
-    function global_stop(uint256 nonce, bytes calldata signatures) public override {
+    function global_stop(uint256 nonce, bytes calldata signatures) external override {
         require(!is_stopped, "bridge already stopped");
         bytes memory message = abi.encode(nonce, "global_stop");
         require(
@@ -181,7 +182,7 @@ contract ERC20_Bridge_Logic_Restricted is IERC20_Bridge_Logic_Restricted {
     /// @param signatures Vega-supplied signature bundle of a validator-signed order
     /// @dev bridge must be stopped
     /// @dev emits Bridge_Resumed if successful
-    function global_resume(uint256 nonce, bytes calldata signatures) public override {
+    function global_resume(uint256 nonce, bytes calldata signatures) external override {
         require(is_stopped, "bridge not stopped");
         bytes memory message = abi.encode(nonce, "global_resume");
         require(
@@ -195,7 +196,7 @@ contract ERC20_Bridge_Logic_Restricted is IERC20_Bridge_Logic_Restricted {
     /// @notice this function allows the sender to exempt themselves from the deposit limits
     /// @notice this feature is specifically for liquidity and rewards providers
     /// @dev emits Depositor_Exempted if successful
-    function exempt_depositor() public override {
+    function exempt_depositor() external override {
         require(!exempt_depositors[msg.sender], "sender already exempt");
         exempt_depositors[msg.sender] = true;
         emit Depositor_Exempted(msg.sender);
@@ -204,7 +205,7 @@ contract ERC20_Bridge_Logic_Restricted is IERC20_Bridge_Logic_Restricted {
     /// @notice this function allows the exemption_lister to revoke a depositor's exemption from deposit limits
     /// @notice this feature is specifically for liquidity and rewards providers
     /// @dev emits Depositor_Exemption_Revoked if successful
-    function revoke_exempt_depositor() public override {
+    function revoke_exempt_depositor() external override {
         require(exempt_depositors[msg.sender], "sender not exempt");
         exempt_depositors[msg.sender] = false;
         emit Depositor_Exemption_Revoked(msg.sender);
@@ -213,7 +214,7 @@ contract ERC20_Bridge_Logic_Restricted is IERC20_Bridge_Logic_Restricted {
     /// @notice this view returns true if the given despoitor address has been exempted from deposit limits
     /// @param depositor The depositor to check
     /// @return true if depositor is exempt
-    function is_exempt_depositor(address depositor) public view override returns (bool) {
+    function is_exempt_depositor(address depositor) external view override returns (bool) {
         return exempt_depositors[depositor];
     }
 
@@ -235,7 +236,7 @@ contract ERC20_Bridge_Logic_Restricted is IERC20_Bridge_Logic_Restricted {
         uint256 creation,
         uint256 nonce,
         bytes memory signatures
-    ) public override {
+    ) external override {
         require(!is_stopped, "bridge stopped");
         require(
             withdraw_thresholds[asset_source] > amount || creation + default_withdraw_delay <= block.timestamp,
@@ -261,7 +262,7 @@ contract ERC20_Bridge_Logic_Restricted is IERC20_Bridge_Logic_Restricted {
         address asset_source,
         uint256 amount,
         bytes32 vega_public_key
-    ) public override {
+    ) external override {
         require(!is_stopped, "bridge stopped");
 
         if (!exempt_depositors[msg.sender]) {
@@ -297,24 +298,24 @@ contract ERC20_Bridge_Logic_Restricted is IERC20_Bridge_Logic_Restricted {
     /// @notice This view returns true if the given ERC20 token contract has been listed valid for deposit
     /// @param asset_source Contract address for given ERC20 token
     /// @return True if asset is listed
-    function is_asset_listed(address asset_source) public view override returns (bool) {
+    function is_asset_listed(address asset_source) external view override returns (bool) {
         return listed_tokens[asset_source];
     }
 
     /// @return current multisig_control_address
-    function get_multisig_control_address() public view override returns (address) {
+    function get_multisig_control_address() external view override returns (address) {
         return multisig_control_address();
     }
 
     /// @param asset_source Contract address for given ERC20 token
     /// @return The assigned Vega Asset Id for given ERC20 token
-    function get_vega_asset_id(address asset_source) public view override returns (bytes32) {
+    function get_vega_asset_id(address asset_source) external view override returns (bytes32) {
         return asset_source_to_vega_asset_id[asset_source];
     }
 
     /// @param vega_asset_id Vega-assigned asset ID for which you want the ERC20 token address
     /// @return The ERC20 token contract address for a given Vega Asset Id
-    function get_asset_source(bytes32 vega_asset_id) public view override returns (address) {
+    function get_asset_source(bytes32 vega_asset_id) external view override returns (address) {
         return vega_asset_ids_to_source[vega_asset_id];
     }
 

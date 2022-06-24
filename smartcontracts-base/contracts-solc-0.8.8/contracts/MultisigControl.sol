@@ -33,7 +33,7 @@ contract MultisigControl is IMultisigControl {
         uint16 new_threshold,
         uint256 nonce,
         bytes calldata signatures
-    ) public override {
+    ) external override {
         require(new_threshold < 1000 && new_threshold > 0, "new threshold outside range");
         bytes memory message = abi.encode(new_threshold, nonce, "set_threshold");
         require(verify_signatures(signatures, message, nonce), "bad signatures");
@@ -51,7 +51,7 @@ contract MultisigControl is IMultisigControl {
         address new_signer,
         uint256 nonce,
         bytes calldata signatures
-    ) public override {
+    ) external override {
         bytes memory message = abi.encode(new_signer, nonce, "add_signer");
         require(!signers[new_signer], "signer already exists");
         require(verify_signatures(signatures, message, nonce), "bad signatures");
@@ -70,7 +70,7 @@ contract MultisigControl is IMultisigControl {
         address old_signer,
         uint256 nonce,
         bytes calldata signatures
-    ) public override {
+    ) external override {
         bytes memory message = abi.encode(old_signer, nonce, "remove_signer");
         require(signers[old_signer], "signer doesn't exist");
         require(verify_signatures(signatures, message, nonce), "bad signatures");
@@ -84,7 +84,7 @@ contract MultisigControl is IMultisigControl {
     /// @param signatures Vega-supplied signature bundle of a validator-signed order
     /// @notice See MultisigControl for more about signatures
     /// @dev Emits 'NonceBurnt' event
-    function burn_nonce(uint256 nonce, bytes calldata signatures) public override {
+    function burn_nonce(uint256 nonce, bytes calldata signatures) external override {
         bytes memory message = abi.encode(nonce, "burn_nonce");
         require(verify_signatures(signatures, message, nonce), "bad signatures");
         emit NonceBurnt(nonce);
@@ -169,24 +169,24 @@ contract MultisigControl is IMultisigControl {
     }
 
     /// @return Number of valid signers
-    function get_valid_signer_count() public view override returns (uint8) {
+    function get_valid_signer_count() external view override returns (uint8) {
         return signer_count;
     }
 
     /// @return Current threshold
-    function get_current_threshold() public view override returns (uint16) {
+    function get_current_threshold() external view override returns (uint16) {
         return threshold;
     }
 
     /// @param signer_address target potential signer address
     /// @return true if address provided is valid signer
-    function is_valid_signer(address signer_address) public view override returns (bool) {
+    function is_valid_signer(address signer_address) external view override returns (bool) {
         return signers[signer_address];
     }
 
     /// @param nonce Nonce to lookup
     /// @return true if nonce has been used
-    function is_nonce_used(uint256 nonce) public view override returns (bool) {
+    function is_nonce_used(uint256 nonce) external view override returns (bool) {
         return used_nonces[nonce];
     }
 }
