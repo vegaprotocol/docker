@@ -1,7 +1,7 @@
 FROM ethereum/solc:0.8.8 AS solc088
 FROM ethereum/solc:0.8.1 AS solc081
 
-FROM node:16-alpine AS builder
+FROM node:18-alpine AS builder
 RUN mkdir /app
 WORKDIR /app
 ENV PATH="$PATH:/app/node_modules/.bin"
