@@ -34,21 +34,7 @@ EOF
 }
 
 run() {
-    SECRET=$(cat /app/config/password)
-    echo "Using password: ${SECRET}"
-    rm /tmp/stdin /tmp/stdout || true
-    mkfifo /tmp/stdin /tmp/stdout
-    (
-    exec 3>/tmp/stdin
-    while read < /tmp/stdout
-    do
-        if [[ "$REPLY" =~ "enter the password" ]]; then
-            echo '{ "jsonrpc": "2.0", "id":1, "result": { "text":"'"$SECRET"'" } }' > /tmp/stdin
-            break
-        fi
-    done
-    ) &
-    /usr/local/bin/clef --stdio-ui --keystore "$DATA"/keystore --configdir "$DATA" --chainid "$CHAINID" --http --http.addr 0.0.0.0 --http.port 8550 --http.vhosts "*" --rules /app/config/rules.js --nousb --lightkdf --ipcdisable --4bytedb-custom /app/config/4byte.json --pcscdpath "" --auditlog "" --loglevel 3 < /tmp/stdin | tee /tmp/stdout
+    PASSWORD_FILE_PATH=/app/config/password clef-runner --stdio-ui --keystore /app/data/keystore --configdir /app/data/ --chainid 1440 --http --http.addr 0.0.0.0 --http.port 8553 --rules /app/config/rules.js --nousb --lightkdf --ipcdisable --stdio-ui
 }
 
 full() {
