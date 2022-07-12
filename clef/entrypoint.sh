@@ -34,7 +34,7 @@ EOF
 }
 
 run() {
-    PASSWORD_FILE_PATH=/app/config/password clef-runner --stdio-ui --keystore /app/data/keystore --configdir /app/data/ --chainid 1440 --http --http.addr 0.0.0.0 --http.port 8553 --rules /app/config/rules.js --nousb --lightkdf --ipcdisable --stdio-ui
+    PASSWORD_FILE_PATH=/app/config/password clef-runner --stdio-ui --keystore /app/data/keystore --configdir /app/data/ --chainid $CHAINID --http --http.addr 0.0.0.0 --http.port 8550 --rules /app/config/rules.js --nousb --lightkdf --ipcdisable --stdio-ui
 }
 
 full() {
