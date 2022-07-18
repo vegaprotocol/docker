@@ -52,7 +52,9 @@ func main() {
 			}
 
 			var rpcResp string
-			if strings.Contains(text, "enter the password") || strings.Contains(text, "enter a password") {
+			if strings.Contains(text, "enter the password") ||
+				strings.Contains(text, "enter a password") ||
+				strings.Contains(text, "Please enter password") {
 				if err := json.Unmarshal(stdOutScan.Bytes(), &req); err != nil {
 					panic(err)
 				}

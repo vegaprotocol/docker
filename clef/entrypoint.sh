@@ -18,9 +18,12 @@ $SECRET
 $SECRET
 EOF
     if [ "$(ls -A "$DATA"/keystore 2> /dev/null)" = "" ]; then
-        /usr/local/bin/clef --keystore "$DATA"/keystore --stdio-ui newaccount --lightkdf 2>&1 << EOF
+        for i in `seq 2 20`
+        do
+            /usr/local/bin/clef --keystore "$DATA"/keystore --stdio-ui newaccount --lightkdf 2>&1 << EOF
 $SECRET
 EOF
+    done
     fi
     ls -al "$DATA"/keystore
     /usr/local/bin/clef --keystore "$DATA"/keystore --configdir "$DATA" --stdio-ui setpw 0x"$(parse_json "$(cat "$DATA"/keystore/*)" address)" 2>&1 << EOF
