@@ -7,6 +7,9 @@ function OnApprovedTx() {
 function ApproveListing() {
     return "Approve"
 }
+function ApproveNewAccount() {
+    return "Approve"
+}
 function ApproveTx() {
     return "Approve"
 }

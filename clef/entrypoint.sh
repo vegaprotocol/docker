@@ -18,9 +18,12 @@ $SECRET
 $SECRET
 EOF
     if [ "$(ls -A "$DATA"/keystore 2> /dev/null)" = "" ]; then
-        /usr/local/bin/clef --keystore "$DATA"/keystore --stdio-ui newaccount --lightkdf 2>&1 << EOF
+        for i in `seq 2 20`
+        do
+            /usr/local/bin/clef --keystore "$DATA"/keystore --stdio-ui newaccount --lightkdf 2>&1 << EOF
 $SECRET
 EOF
+    done
     fi
     ls -al "$DATA"/keystore
     /usr/local/bin/clef --keystore "$DATA"/keystore --configdir "$DATA" --stdio-ui setpw 0x"$(parse_json "$(cat "$DATA"/keystore/*)" address)" 2>&1 << EOF
@@ -34,21 +37,7 @@ EOF
 }
 
 run() {
-    SECRET=$(cat /app/config/password)
-    echo "Using password: ${SECRET}"
-    rm /tmp/stdin /tmp/stdout || true
-    mkfifo /tmp/stdin /tmp/stdout
-    (
-    exec 3>/tmp/stdin
-    while read < /tmp/stdout
-    do
-        if [[ "$REPLY" =~ "enter the password" ]]; then
-            echo '{ "jsonrpc": "2.0", "id":1, "result": { "text":"'"$SECRET"'" } }' > /tmp/stdin
-            break
-        fi
-    done
-    ) &
-    /usr/local/bin/clef --stdio-ui --keystore "$DATA"/keystore --configdir "$DATA" --chainid "$CHAINID" --http --http.addr 0.0.0.0 --http.port 8550 --http.vhosts "*" --rules /app/config/rules.js --nousb --lightkdf --ipcdisable --4bytedb-custom /app/config/4byte.json --pcscdpath "" --auditlog "" --loglevel 3 < /tmp/stdin | tee /tmp/stdout
+    PASSWORD_FILE_PATH=/app/config/password clef-runner --stdio-ui --keystore /app/data/keystore --configdir /app/data/ --chainid $CHAINID --http --http.addr 0.0.0.0 --http.port 8550 --rules /app/config/rules.js --nousb --lightkdf --ipcdisable --stdio-ui
 }
 
 full() {
