@@ -9,6 +9,13 @@ module.exports = {
   compilers: {
     solc: {
       version: "0.8.8",
+      settings: {
+        optimizer: {
+          enabled: true,
+          runs: 20000
+        },
+        evmVersion: "london"
+      },
     },
   },
 };
