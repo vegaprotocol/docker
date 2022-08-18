@@ -1,0 +1,22 @@
+name: Docker / timescaledb
+ 
+on:
+  push:
+    branches: main
+    paths:
+      - 'timescaledb/version.json'
+  pull_request:
+    paths:
+      - 'timescaledb/**'
+      - '.github/workflows/docker-timescaledb.yml'
+
+jobs:
+  build_docker_image:
+    uses: vegaprotocol/docker-public/.github/workflows/docker-generic.yml@main
+    with:
+      image_name: timescaledb
+      docker_context_path: ./timescaledb
+      platforms: linux/amd64, linux/arm64
+    secrets:
+      dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
+      dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
