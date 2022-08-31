@@ -1,4 +1,4 @@
 {
-    "version": "2.7.1-pg14",
+    "version": "2.7.1-pg14-patch1",
     "name": "vegaprotocol/timescaledb"
 }
