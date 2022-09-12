@@ -20,9 +20,8 @@ COPY --from=build /go/clef-runner /usr/local/bin/clef-runner
 COPY rules.js /app/config/rules.js
 COPY 4byte.json /app/config/4byte.json
 COPY password /app/config/password
+COPY data /app/data
 COPY entrypoint.sh /entrypoint.sh
-
-RUN /entrypoint.sh init
 
 EXPOSE 8550
 
