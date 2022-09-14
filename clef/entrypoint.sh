@@ -9,6 +9,7 @@ echo "Running action '${ACTION}'"
 parse_json() { echo $1|sed -e 's/[{}]/''/g'|sed -e 's/", "/'\",\"'/g'|sed -e 's/" ,"/'\",\"'/g'|sed -e 's/" , "/'\",\"'/g'|sed -e 's/","/'\"---SEPERATOR---\"'/g'|awk -F=':' -v RS='---SEPERATOR---' "\$1~/\"$2\"/ {print}"|sed -e "s/\"$2\"://"|tr -d "\n\t"|sed -e 's/\\"/"/g'|sed -e 's/\\\\/\\/g'|sed -e 's/^[ \t]*//g'|sed -e 's/^"//' -e 's/"$//' ; }
 
 init() {
+    echo "Initiating Clef"
     if [ ! -f /app/config/password ]; then
         < /dev/urandom tr -dc _A-Z-a-z-0-9 2> /dev/null | head -c32 > /app/config/password
     fi
@@ -55,9 +56,7 @@ run() {
 }
 
 full() {
-    if [ ! -f "$DATA"/masterseed.json ]; then
-        init
-    fi
+    init
     run
 }
 

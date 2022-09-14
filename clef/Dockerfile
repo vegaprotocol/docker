@@ -23,6 +23,8 @@ COPY password /app/config/password
 COPY data /app/data
 COPY entrypoint.sh /entrypoint.sh
 
+RUN /entrypoint.sh init
+
 EXPOSE 8550
 
 ENTRYPOINT ["/entrypoint.sh"]
