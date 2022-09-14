@@ -1,4 +1,4 @@
-FROM timescale/timescaledb:2.7.1-pg14
+FROM timescale/timescaledb:2.8.0-pg14
 
 RUN set -euo; \
     sed -i 's/^restart_after_crash.*//' /usr/local/share/postgresql/postgresql.conf.sample\
