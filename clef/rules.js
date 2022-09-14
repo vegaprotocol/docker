@@ -1,16 +1,4 @@
-function OnSignerStartup() {
-    return "Approve"
-}
-function OnApprovedTx() {
-    return "Approve"
-}
 function ApproveListing() {
-    return "Approve"
-}
-function ApproveNewAccount() {
-    return "Approve"
-}
-function ApproveTx() {
     return "Approve"
 }
 function ApproveSignData() {

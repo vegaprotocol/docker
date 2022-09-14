@@ -22,6 +22,8 @@ COPY 4byte.json /app/config/4byte.json
 COPY password /app/config/password
 COPY data /app/data
 COPY entrypoint.sh /entrypoint.sh
+RUN chmod 400 /app/data/masterseed.json
+RUN /entrypoint.sh init
 
 EXPOSE 8550
 
