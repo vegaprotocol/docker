@@ -14,5 +14,6 @@ RUN apt-get update \
         libxtst6 \
         xauth \
         xvfb \
+        libnss3-dev \
     && rm -rf /var/lib/apt/lists/*
 USER runner
