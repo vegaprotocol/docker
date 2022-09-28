@@ -17,7 +17,7 @@ jobs:
     with:
       image_name: github-runner
       docker_context_path: ./github-runner
-      platforms: linux/amd64, linux/arm64
+      platforms: linux/amd64
     secrets:
       dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
       dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
