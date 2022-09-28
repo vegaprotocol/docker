@@ -16,8 +16,9 @@ RUN apt-get update \
         xvfb \
         libnss3-dev \
         wget \
-    && rm -rf /var/lib/apt/lists/*
-RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
+    && wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
     && apt-get -f -y install ./google-chrome-stable_current_amd64.deb \
-    && rm google-chrome-stable_current_amd64.deb
+    && rm google-chrome-stable_current_amd64.deb \
+    && apt purge wget \
+    && rm -rf /var/lib/apt/lists/*
 USER runner
