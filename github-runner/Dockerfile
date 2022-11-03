@@ -23,9 +23,9 @@ RUN apt-get update \
     && tar -xvf go1.19.linux-amd64.tar.gz \
     && rm go1.19.linux-amd64.tar.gz \
     && mv go /usr/local \
-    && echo 'export GOBIN=/usr/local/go/bin'  >> /home/runner/.profile \
-    && echo 'export GOPATH=$HOME/go'  >> /home/runner/.profile \
-    && echo 'export PATH=$PATH:$GOBIN:$GOPATH/bin'  >> /home/runner/.profile \
     && rm -rf /var/lib/apt/lists/* 
 USER runner
-RUN source /home/runner/.profile
+RUN echo 'export GOBIN=/usr/local/go/bin' >> $HOME/.profile \
+    && echo 'export GOPATH=$HOME/go' >> $HOME/.profile \
+    && echo 'export PATH=$PATH:$GOBIN:$GOPATH/bin' >> $HOME/.profile \
+    && source /home/runner/.profile
