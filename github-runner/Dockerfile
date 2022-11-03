@@ -1,4 +1,4 @@
-FROM summerwind/actions-runner:v2.296.2-ubuntu-20.04
+FROM summerwind/actions-runner:v2.299.1-ubuntu-20.04
 USER root
 RUN apt-get update \
     && apt-get install -y \
