@@ -22,8 +22,8 @@ RUN curl -s https://deb.nodesource.com/setup_16.x | bash \
         libnss3-dev \
         wget \
         golang-go \
-    # && wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
-    # && apt-get -f -y install ./google-chrome-stable_current_amd64.deb \
-    # && rm google-chrome-stable_current_amd64.deb \
+    && wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
+    && apt-get -f -y install ./google-chrome-stable_current_amd64.deb \
+    && rm google-chrome-stable_current_amd64.deb \
     && rm -rf /var/lib/apt/lists/* 
 USER runner
