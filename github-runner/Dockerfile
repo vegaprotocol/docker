@@ -1,7 +1,12 @@
 FROM summerwind/actions-runner:v2.299.1-ubuntu-20.04
 USER root
-RUN apt-get update \
+RUN curl -s https://deb.nodesource.com/setup_16.x | bash \
+    && curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
+    && add-apt-repository ppa:longsleep/golang-backports \
+    && apt-get update \
     && apt-get install -y \
+        nodejs\
         yarn \
         libgtk2.0-0 \
         libgtk-3-0 \
@@ -16,16 +21,9 @@ RUN apt-get update \
         xvfb \
         libnss3-dev \
         wget \
+        golang-go \
     && wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
     && apt-get -f -y install ./google-chrome-stable_current_amd64.deb \
     && rm google-chrome-stable_current_amd64.deb \
-    && wget -q https://go.dev/dl/go1.19.linux-amd64.tar.gz \
-    && tar -xvf go1.19.linux-amd64.tar.gz \
-    && rm go1.19.linux-amd64.tar.gz \
-    && mv go /usr/local \
     && rm -rf /var/lib/apt/lists/* 
 USER runner
-RUN echo 'export GOBIN=/usr/local/go/bin' >> $HOME/.profile \
-    && echo 'export GOPATH=$HOME/go' >> $HOME/.profile \
-    && echo 'export PATH=$PATH:$GOBIN:$GOPATH/bin' >> $HOME/.profile \
-    && source /home/runner/.profile
