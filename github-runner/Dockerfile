@@ -27,3 +27,6 @@ RUN curl -s https://deb.nodesource.com/setup_16.x | bash \
     && rm google-chrome-stable_current_amd64.deb \
     && rm -rf /var/lib/apt/lists/* 
 USER runner
+ENV GOBIN=$HOME/go/bin \
+    PATH=$PATH:$HOME/go/bin
+RUN mkdir -p $GOBIN
