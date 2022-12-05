@@ -1,23 +1,23 @@
-name: Docker / smartcontracts-base
+name: Docker / clef
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'smartcontracts-base/version.json'
+      - 'clef/version.json'
   pull_request:
     paths:
-      - 'smartcontracts-base/**'
-      - '.github/workflows/docker-smartcontracts-base.yml'
+      - 'clef/**'
+      - '.github/workflows/docker-clef.yml'
 
 jobs:
   build_docker_image:
     uses: vegaprotocol/docker-public/.github/workflows/docker-generic.yml@main
     with:
-      image_name: smartcontracts-base
-      docker_context_path: ./smartcontracts-base
-      platforms: linux/amd64,linux/arm64
+      image_name: clef
+      docker_context_path: ./clef
+      platforms: linux/amd64, linux/arm64
     secrets:
       dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
       dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}

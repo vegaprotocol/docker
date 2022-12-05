@@ -1,8 +1,9 @@
 name: Docker / ganache
- 
+
 on:
   push:
-    branches: main
+    branches:
+      - main
     paths:
       - 'ganache/version.json'
   pull_request:

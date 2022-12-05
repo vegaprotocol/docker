@@ -1,23 +1,23 @@
-name: Docker / smartcontracts-base
+name: Docker / timescaledb
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'smartcontracts-base/version.json'
+      - 'timescaledb/version.json'
   pull_request:
     paths:
-      - 'smartcontracts-base/**'
-      - '.github/workflows/docker-smartcontracts-base.yml'
+      - 'timescaledb/**'
+      - '.github/workflows/docker-timescaledb.yml'
 
 jobs:
   build_docker_image:
     uses: vegaprotocol/docker-public/.github/workflows/docker-generic.yml@main
     with:
-      image_name: smartcontracts-base
-      docker_context_path: ./smartcontracts-base
-      platforms: linux/amd64,linux/arm64
+      image_name: timescaledb
+      docker_context_path: ./timescaledb
+      platforms: linux/amd64, linux/arm64
     secrets:
       dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
       dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
