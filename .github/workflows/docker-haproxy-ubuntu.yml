@@ -1,0 +1,23 @@
+name: Docker / haproxy-ubuntu
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'haproxy-ubuntu/version.json'
+  pull_request:
+    paths:
+      - 'haproxy-ubuntu/**'
+      - '.github/workflows/docker-haproxy-ubuntu.yml'
+
+jobs:
+  build_docker_image:
+    uses: vegaprotocol/docker-public/.github/workflows/docker-generic.yml@main
+    with:
+      image_name: haproxy-ubuntu
+      docker_context_path: ./haproxy-ubuntu
+      platforms: linux/amd64
+    secrets:
+      dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
+      dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
