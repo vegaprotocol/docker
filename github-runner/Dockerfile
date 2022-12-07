@@ -55,7 +55,7 @@ ENV GOBIN=$HOME/go/bin \
     PATH=$PATH:$HOME/go/bin
 RUN mkdir -p $GOBIN \
     && mkdir -p ~/.vegacapsule \
-    && cp /usr/local/bin/nomad ~/.vegacapsule/nomad_${NOMAD_VERSION}
+    && ln -s /usr/local/bin/nomad ~/.vegacapsule/nomad_${NOMAD_VERSION}
 
 RUN vegacapsule version \
     && vega version \
