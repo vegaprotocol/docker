@@ -37,10 +37,10 @@ RUN wget -q https://github.com/vegaprotocol/vegacapsule/releases/download/$VEGAC
     && rm vegacapsule-linux-amd64.zip
 
 # Install Nomad
-RUN wget -q https://releases.hashicorp.com/nomad/#NOMAD_VERSION/nomad_#NOMAD_VERSION_darwin_amd64.zip \
-    && unzip nomad_#NOMAD_VERSION_darwin_amd64.zip \
+RUN wget -q https://releases.hashicorp.com/nomad/$NOMAD_VERSION/nomad_$NOMAD_VERSION_darwin_amd64.zip \
+    && unzip nomad_$NOMAD_VERSION_darwin_amd64.zip \
     && mv nomad /usr/local/bin/ \
-    && rm nomad_#NOMAD_VERSION_darwin_amd64.zip
+    && rm nomad_$NOMAD_VERSION_darwin_amd64.zip
 
 # Install Vega CLI
 RUN wget https://github.com/vegaprotocol/vega/releases/download/$VEGA_VERSION/vega-linux-amd64.zip \
@@ -53,4 +53,4 @@ ENV GOBIN=$HOME/go/bin \
     PATH=$PATH:$HOME/go/bin
 RUN mkdir -p $GOBIN \
     && mkdir -p ~/.vegacapsule \
-    && cp /usr/local/bin/nomad ~/.vegacapsule/nomad_#NOMAD_VERSION
+    && cp /usr/local/bin/nomad ~/.vegacapsule/nomad_$NOMAD_VERSION
