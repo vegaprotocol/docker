@@ -7,3 +7,4 @@ RUN apt-get update \
         requests \
         python-dateutil \
     && rm -rf /var/lib/apt/lists/*
+RUN curl https://raw.githubusercontent.com/haproxytech/haproxy-lua-cors/master/lib/cors.lua -o /usr/local/etc/haproxy/cors.lua
