@@ -1,6 +1,6 @@
 FROM summerwind/actions-runner:v2.299.1-ubuntu-20.04
 USER root
-ENV VEGA_VERSION=v0.63.1
+ENV VEGA_VERSION=v0.64.0
 ENV VEGACAPSULE_VERSION=v0.3.0
 ENV NOMAD_VERSION=1.3.1
 RUN curl -s https://deb.nodesource.com/setup_16.x | bash \
@@ -9,22 +9,22 @@ RUN curl -s https://deb.nodesource.com/setup_16.x | bash \
     && add-apt-repository ppa:longsleep/golang-backports \
     && apt-get update \
     && apt-get install -y \
-        nodejs\
-        yarn \
-        libgtk2.0-0 \
-        libgtk-3-0 \
-        libgbm-dev \
-        libnotify-dev \
-        libgconf-2-4 \
-        libnss3 \
-        libxss1 \
-        libasound2 \
-        libxtst6 \
-        xauth \
-        xvfb \
-        libnss3-dev \
-        wget \
-        golang-go \
+    nodejs\
+    yarn \
+    libgtk2.0-0 \
+    libgtk-3-0 \
+    libgbm-dev \
+    libnotify-dev \
+    libgconf-2-4 \
+    libnss3 \
+    libxss1 \
+    libasound2 \
+    libxtst6 \
+    xauth \
+    xvfb \
+    libnss3-dev \
+    wget \
+    golang-go \
     && wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
     && apt-get -f -y install ./google-chrome-stable_current_amd64.deb \
     && rm google-chrome-stable_current_amd64.deb \
