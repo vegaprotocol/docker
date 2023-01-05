@@ -13,6 +13,10 @@ on:
       platforms:
         required: true
         type: string
+      pre_pull_image:
+        required: false
+        default: ""
+        type: string
       upload_artifact:
         required: false
         default: false
@@ -36,6 +40,10 @@ jobs:
 
     - name: Available platforms
       run: echo ${{ steps.qemu.outputs.platforms }}
+
+    - name: Pre pull image
+      run: docker pull "${{ inputs.pre_pull_image }}"
+      if: inputs.pre_pull_image != ""
 
     - name: Setup Docker Buildx
       uses: docker/setup-buildx-action@v2
