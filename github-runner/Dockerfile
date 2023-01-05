@@ -1,8 +1,6 @@
 FROM summerwind/actions-runner:v2.299.1-ubuntu-20.04
 USER root
-ENV VEGA_VERSION=v0.64.0
-ENV VEGACAPSULE_VERSION=v0.3.0
-ENV NOMAD_VERSION=1.3.1
+
 RUN curl -s https://deb.nodesource.com/setup_16.x | bash \
     && curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
@@ -29,6 +27,11 @@ RUN curl -s https://deb.nodesource.com/setup_16.x | bash \
     && apt-get -f -y install ./google-chrome-stable_current_amd64.deb \
     && rm google-chrome-stable_current_amd64.deb \
     && rm -rf /var/lib/apt/lists/* 
+
+# ENV variables are here to allow cache previous step and speet the build up
+ENV VEGA_VERSION=v0.64.0
+ENV VEGACAPSULE_VERSION=v0.3.0
+ENV NOMAD_VERSION=1.3.1
 
 # Install vegacapsule
 RUN wget -q https://github.com/vegaprotocol/vegacapsule/releases/download/$VEGACAPSULE_VERSION/vegacapsule-linux-amd64.zip \
