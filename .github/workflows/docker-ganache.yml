@@ -13,7 +13,7 @@ on:
 
 jobs:
   build_docker_image:
-    uses: vegaprotocol/docker-public/.github/workflows/docker-generic.yml@bump-ganache-image
+    uses: vegaprotocol/docker-public/.github/workflows/docker-generic.yml@main
     with:
       image_name: ganache
       docker_context_path: ./ganache
@@ -23,15 +23,14 @@ jobs:
       dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
   
   run_tests:
-    needs: build_docker_image
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
       - uses: actions/setup-node@v3
         with:
           node-version: 14
-          cache: 'npm'
       - name: Build local ganache image
         working-directory: ./ganache
         run: docker build -t vegaprotocol/ganache:local .
@@ -42,7 +41,7 @@ jobs:
       - name: Run token tests
         working-directory: ./ganache/scripts/testing
         run: |
-          docker run -rm -p 8545:8545 vegaprotocol/ganache:local \
+          docker run --rm -p 8545:8545 --detach --entrypoint="ganache-cli" vegaprotocol/ganache:local \
             --blockTime 1 \
             --chainId 1440 \
             --networkId 1441 \
@@ -50,4 +49,5 @@ jobs:
             -h 0.0.0.0 \
             -p 8545 \
             -m "ozone access unlock valid olympic save include omit supply green clown session";
+          sleep 30;
           node test_tokens.js
