@@ -74,7 +74,7 @@ jobs:
         outputs: type=local,dest=/tmp/docker-image.tar
 
     - name: Upload artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: docker_image
         path: /tmp/docker-image.tar
