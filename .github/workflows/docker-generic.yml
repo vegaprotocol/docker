@@ -43,7 +43,7 @@ jobs:
 
     - name: Pre pull image
       run: docker pull "${{ inputs.pre_pull_image }}"
-      if: inputs.pre_pull_image != ""
+      if: inputs.pre_pull_image != ''
 
     - name: Setup Docker Buildx
       uses: docker/setup-buildx-action@v2
