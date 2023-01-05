@@ -41,9 +41,9 @@ jobs:
     - name: Available platforms
       run: echo ${{ steps.qemu.outputs.platforms }}
 
-    - name: Pre pull image
-      run: docker pull "${{ inputs.pre_pull_image }}"
-      if: inputs.pre_pull_image != ''
+    # - name: Pre pull image
+    #   run: docker pull "${{ inputs.pre_pull_image }}"
+    #   if: inputs.pre_pull_image != ''
 
     - name: Setup Docker Buildx
       uses: docker/setup-buildx-action@v2
@@ -69,6 +69,7 @@ jobs:
         context: ${{ inputs.docker_context_path }}
         file: "${{ inputs.docker_context_path }}/Dockerfile"
         platforms: ${{ inputs.platforms }}
+        cache-from: ${{ inputs.pre_pull_image }}
         tags: ${{ steps.tags.outputs.latest }},${{ steps.tags.outputs.current }}
         push: ${{ github.event_name != 'pull_request' }}
         outputs: type=local,dest=/tmp/docker-image.tar
