@@ -69,14 +69,14 @@ jobs:
         context: ${{ inputs.docker_context_path }}
         file: "${{ inputs.docker_context_path }}/Dockerfile"
         platforms: ${{ inputs.platforms }}
-        cache-from: ${{ inputs.pre_pull_image }}
+        # cache-from: ${{ inputs.pre_pull_image }}
         tags: ${{ steps.tags.outputs.latest }},${{ steps.tags.outputs.current }}
         push: ${{ github.event_name != 'pull_request' }}
-        outputs: type=local,dest=/tmp/docker-image.tar
+        # outputs: type=local,dest=/tmp/docker-image.tar
 
-    - name: Upload artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: docker_image
-        path: /tmp/docker-image.tar
-      if: inputs.upload_artifact
+    # - name: Upload artifact
+    #   uses: actions/upload-artifact@v2
+    #   with:
+    #     name: docker_image
+    #     path: /tmp/docker-image.tar
+    #   if: inputs.upload_artifact
