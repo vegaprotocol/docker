@@ -18,6 +18,7 @@ jobs:
       image_name: github-runner
       docker_context_path: ./github-runner
       platforms: linux/amd64
+      pre_pull_image: vegaprotocol/github-runner:latest
     secrets:
       dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
       dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
