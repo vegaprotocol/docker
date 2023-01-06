@@ -29,7 +29,7 @@ RUN curl -s https://deb.nodesource.com/setup_16.x | bash \
     && rm -rf /var/lib/apt/lists/* 
 
 # ENV variables are here to allow cache previous step and speet the build up
-ENV VEGA_VERSION=v0.65.1
+ENV VEGA_VERSION=v0.66.1
 ENV VEGACAPSULE_VERSION=v0.5.0
 ENV NOMAD_VERSION=1.3.1
 
