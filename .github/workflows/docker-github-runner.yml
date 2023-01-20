@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - github-runner-test
     paths:
       - 'github-runner/version.json'
   pull_request:
