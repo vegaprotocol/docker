@@ -1,4 +1,4 @@
-FROM summerwind/actions-runner:v2.299.1-ubuntu-20.04
+FROM summerwind/actions-runner:v2.301.1-ubuntu-22.04
 USER root
 
 RUN curl -s https://deb.nodesource.com/setup_16.x | bash \
