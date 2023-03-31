@@ -1,7 +1,7 @@
 FROM ethereum/solc:0.8.8 AS solc088
 FROM ethereum/solc:0.8.1 AS solc081
 
-FROM node:16-alpine AS builder
+FROM node:19-alpine AS builder
 RUN mkdir /app
 WORKDIR /app
 ENV PATH="$PATH:/app/node_modules/.bin"
@@ -16,7 +16,7 @@ RUN npm install
 
 # # #
 
-FROM node:16-alpine
+FROM node:19-alpine
 LABEL org.opencontainers.image.source https://github.com/vegaprotocol/devops-infra
 RUN mkdir /app
 WORKDIR /app
