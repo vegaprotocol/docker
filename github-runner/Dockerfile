@@ -26,7 +26,7 @@ RUN curl -s https://deb.nodesource.com/setup_16.x | bash \
     && wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
     && apt-get -f -y install ./google-chrome-stable_current_amd64.deb \
     && rm google-chrome-stable_current_amd64.deb \
-    && rm -rf /var/lib/apt/lists/* 
+    && rm -rf /var/lib/apt/lists/*
 
 # ENV variables are here to allow cache previous step and speet the build up
 ENV VEGA_VERSION=v0.72.4
@@ -49,11 +49,12 @@ RUN wget -q https://releases.hashicorp.com/nomad/${NOMAD_VERSION}/nomad_${NOMAD_
 RUN wget https://github.com/vegaprotocol/vega/releases/download/$VEGA_VERSION/vega-linux-amd64.zip \
     && unzip vega-linux-amd64.zip \
     && mv vega /usr/local/bin/ \
-    && rm vega-linux-amd64.zip 
+    && rm vega-linux-amd64.zip
 
 RUN chmod +x /usr/local/bin/vega /usr/local/bin/vegacapsule /usr/local/bin/nomad
 
 USER runner
+
 ENV GOBIN=$HOME/go/bin \
     PATH=$PATH:$HOME/go/bin
 RUN mkdir -p $GOBIN \
