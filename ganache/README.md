@@ -11,13 +11,14 @@ Network is created with the following metadata:
 
 ```
 docker run --name vega-eth-ganache vegaprotocol/ganache:latest ganache-cli \
-    --blockTime 1 \
-    --chainId 1440 \
-    --networkId 1441 \
+    --miner.blockTime 0.5 \
+    --chain.chainId 1440 \
+    --chain.networkId 1441 \
     -h 0.0.0.0 \
     -p 8545 \
-	-m "ozone access unlock valid olympic save include omit supply green clown session" \
-	--db /app/ganache-db
+    --wallet.mnemonic "ozone access unlock valid olympic save include omit supply green clown session" \
+	--database.dbPath /app/ganache-db \
+    --wallet.accountKeysPath keys.json
 ```
 
 ### Useful information
@@ -91,4 +92,12 @@ Private Keys
 (7) 0xafe378ddf5ff1092b8653cb37b0d9df5585e0ee475ea0f96844db003d8a0e279
 (8) 0x9770b0443b973e72cd74b5f87f53fe53f2dba5aee8b0a110789eb6d3d9c70ec6
 (9) 0xc8b01eaa62245b9c229cecc6bc306324c066767eeefda82cf9d3764eb1bae2b7
+```
+
+
+# Development
+
+```
+cd .../docker/ganache ;
+./local-build.sh
 ```
