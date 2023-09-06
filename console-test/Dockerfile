@@ -2,6 +2,9 @@ FROM summerwind/actions-runner:v2.308.0-ubuntu-22.04
 
 USER root
 RUN curl -sSL https://install.python-poetry.org | python3 - \
+    && curl -s https://deb.nodesource.com/setup_16.x | bash \
+    && curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
     && apt-get update \
     && apt-get install -y \
     libnss3 \
@@ -22,7 +25,12 @@ RUN curl -sSL https://install.python-poetry.org | python3 - \
     libgbm1 \
     libpango-1.0-0 \
     libcairo2 \
-    libasound2
+    libasound2 \
+    nodejs \
+    yarn \
+    && rm -rf /var/lib/apt/lists/*
 
 USER runner
 RUN poetry --version
+RUN node -v 
+RUN yarn -v
