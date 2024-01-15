@@ -23,4 +23,7 @@ RUN timescaledb-tune \
 
 RUN set -euo; \
     sed -i 's/^restart_after_crash.*//' /var/lib/postgresql/data/postgresql.conf \
-        && echo "restart_after_crash=no" >> /var/lib/postgresql/data/postgresql.conf;
+        && echo "restart_after_crash=no" >> /var/lib/postgresql/data/postgresql.conf \
+    && sed -i 's/^log_statement.*//' /var/lib/postgresql/data/postgresql.conf \
+        && echo "log_statement='all'" >> /var/lib/postgresql/data/postgresql.conf \
+    ;
