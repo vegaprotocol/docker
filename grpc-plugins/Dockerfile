@@ -1,4 +1,4 @@
-FROM ubuntu:20.04 AS grpc_plugins
+FROM ubuntu:22.04 AS grpc_plugins
 ARG GRPC_VER=1.41.0
 
 
@@ -21,7 +21,7 @@ RUN strip /usr/local/bin/protoc-* /usr/local/bin/grpc_*_plugin
 
 
 
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV BUF_VER="1.0.0-rc12"
