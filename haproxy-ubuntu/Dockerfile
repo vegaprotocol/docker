@@ -1,4 +1,4 @@
-FROM haproxytech/haproxy-ubuntu:2.7.0
+FROM haproxytech/haproxy-ubuntu:2.9.6
 RUN apt-get update \
     && apt-get install -y \
         python3 \
