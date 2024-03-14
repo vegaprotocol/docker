@@ -1,5 +1,5 @@
 # FROM postgres:14-bullseye
-FROM timescale/timescaledb:2.8.0-pg14
+FROM timescale/timescaledb:2.14.2-pg14
 
 ENV TIMESCALEDB_TELEMETRY "off"
 ENV NO_TS_TUNE true
