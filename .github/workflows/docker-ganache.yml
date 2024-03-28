@@ -42,12 +42,12 @@ jobs:
         working-directory: ./ganache/scripts/testing
         run: |
           docker run --rm -p 8545:8545 --detach --entrypoint="ganache-cli" vegaprotocol/ganache:local \
-            --blockTime 1 \
-            --chainId 1440 \
-            --networkId 1441 \
-            --db /app/ganache-db \
+            --miner.blockTime 1 \
+            --chain.chainId 1440 \
+            --chain.networkId 1441 \
+            --database.dbPath /app/ganache-db \
             -h 0.0.0.0 \
             -p 8545 \
-            -m "ozone access unlock valid olympic save include omit supply green clown session";
+            --wallet.mnemonic "ozone access unlock valid olympic save include omit supply green clown session";
           sleep 30;
           node test_tokens.js
