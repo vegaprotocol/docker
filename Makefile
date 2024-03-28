@@ -9,5 +9,5 @@ build-ganache:
 	docker build -t vegaprotocol/ganache:local ./ganache
 	
 .PHONY: build-timescaledb
-build-ganache:
+build-timescaledb:
 	docker build -t vegaprotocol/timescaledb:local ./timescaledb

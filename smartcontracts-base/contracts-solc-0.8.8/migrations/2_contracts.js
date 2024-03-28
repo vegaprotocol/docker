@@ -104,7 +104,7 @@ module.exports = async function (deployer) {
     process.exit(2);
   }
 
-  const wallet = ethers.Wallet.fromMnemonic(ganmacheMnemonic)
+  const wallet = ethers.Wallet.fromPhrase(ganmacheMnemonic)
   let privkey = wallet.privateKey.substr(2);
   let pubkey = wallet.address;
 
