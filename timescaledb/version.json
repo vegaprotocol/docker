@@ -1,4 +1,4 @@
 {
-    "version": "2.8.0-pg14",
-    "name": "vegaprotocol/timescaledb"
+    "version": "2.8.0-pg14-v0.0.2",
+    "name": "vegaprotocol/vegacapsule-timescaledb"
 }

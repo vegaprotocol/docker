@@ -20,11 +20,11 @@ esac
 
 nohup \
         bash -c "ganache-cli \
-            --blockTime 1 \
-            --chainId 1440 \
-            --networkId 1441 \
-            -m \"${GANACHE_MNEMONIC}\" \
-            --db /app/ganache-db \
+            --miner.blockTime 1 \
+            --chain.chainId 1440 \
+            --chain.networkId 1441 \
+            --wallet.mnemonic \"${GANACHE_MNEMONIC}\" \
+            --database.dbPath /app/ganache-db \
             -h 0.0.0.0 \
             -p \"${GANACHE_PORT}\" &" \
     && GANACHE_MNEMONIC="${GANACHE_MNEMONIC}" GANACHE_HOSTNAME="127.0.0.1" GANACHE_PORT="${GANACHE_PORT}" ./run
