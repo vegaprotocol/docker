@@ -19,7 +19,7 @@ case $TARGETARCH in
 esac
 
 nohup \
-        bash -c "ganache-cli \
+        bash -c "node /app/dist/node/cli.js\
             --miner.blockTime 1 \
             --chain.chainId 1440 \
             --chain.networkId 1441 \
