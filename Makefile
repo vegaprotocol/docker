@@ -2,11 +2,11 @@
 
 .PHONY: build-smartcontracts-base
 build-smartcontracts-base:
-	docker build -t vegaprotocol/smartcontracts-base:local ./smartcontracts-base
+	docker build --platform=linux/arm64 -t vegaprotocol/smartcontracts-base:v1.5.0 ./smartcontracts-base
 
 .PHONY: build-ganache
 build-ganache:
-	docker build -t vegaprotocol/ganache:local ./ganache
+	docker build --platform=linux/arm64 --progress=plain -t vegaprotocol/ganache:v1.5.0 ./ganache
 	
 .PHONY: build-timescaledb
 build-timescaledb:

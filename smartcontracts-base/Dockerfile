@@ -13,10 +13,16 @@ RUN \
 ADD package.json package-lock.json ./
 RUN npm install
 
+
+FROM ghcr.io/foundry-rs/foundry as foundary 
+
 # # #
 
-FROM trufflesuite/ganache:v7.9.2
+FROM node:20.3-alpine
 LABEL org.opencontainers.image.source https://github.com/vegaprotocol/devops-infra
+
+RUN apk add --no-cache bash jq openssl gcompat
+
 WORKDIR /app2
 ENV PATH="$PATH:/app2/node_modules/.bin"
 
@@ -25,6 +31,8 @@ COPY --from=solc081 /usr/bin/solc /usr/bin/solc-v0.8.1
 
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/node_modules ./node_modules
+
+COPY --from=foundary /usr/local/bin/anvil /usr/bin/anvil
 
 ADD contracts-solc-0.8.1 ./contracts-solc-0.8.1
 ADD contracts-solc-0.8.8 ./contracts-solc-0.8.8
