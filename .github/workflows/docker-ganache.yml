@@ -41,7 +41,7 @@ jobs:
       - name: Run token tests
         working-directory: ./ganache/scripts/testing
         run: |
-          docker run --rm -p 8545:8545 --detach --entrypoint="ganache-cli" vegaprotocol/ganache:local \
+          docker run --rm -p 8545:8545 --detach vegaprotocol/ganache:local \
             --miner.blockTime 1 \
             --chain.chainId 1440 \
             --chain.networkId 1441 \
