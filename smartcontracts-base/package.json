@@ -14,7 +14,6 @@
     "ethereumjs-util": "^7.0.9",
     "express": "^4.17.1",
     "fs-extra": "^10.0.0",
-    "ganache": "7.7.0",
     "ethers": "^6.6.5",
     "grpc-web": "^1.2.1",
     "keccak": "^3.0.1",
