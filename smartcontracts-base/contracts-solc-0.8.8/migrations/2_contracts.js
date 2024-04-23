@@ -230,7 +230,7 @@ module.exports = async function (deployer, network) {
     MultisigControlV2: { Ethereum: MultisigControlV2.address },
     ERC20BridgeMultisigV2: {Ethereum: ERC20BridgeMultisigV2.address },
     ERC20AssetPoolMultisigV2: {Ethereum: ERC20AssetPoolMultisigV2.address },
-    ERC20_Asset_Pool: { Ethereum: ERC20_Asset_Pool.address },
+    ERC20_Asset_Pool: { Ethereum: erc20_asset_pool_instance.address },
     erc20_bridge_1: { Ethereum: erc20_bridge_1.address },
     erc20_bridge_2: { Ethereum: erc20_bridge_2.address },
   };
