@@ -13,7 +13,7 @@ on:
 
 jobs:
   build_docker_image:
-    uses: vegaprotocol/docker-public/.github/workflows/docker-generic.yml@main
+    uses: vegaprotocol/docker/.github/workflows/docker-generic.yml@main
     with:
       image_name: smartcontracts-base
       docker_context_path: ./smartcontracts-base
