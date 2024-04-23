@@ -13,9 +13,11 @@ GANACHE_PORT_SECONDARY="8546"
 case $TARGETARCH in
     "amd64")
         GANACHE_PORT="8545"
+        GANACHE_PORT_SECONDARY="8546"
         ;;
     "arm64")
-        GANACHE_PORT="8546"
+        GANACHE_PORT="8547"
+        GANACHE_PORT_SECONDARY="8548"
         ;;
 esac
 
