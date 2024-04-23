@@ -2,13 +2,13 @@
 
 
 cd ../smartcontracts-base
-docker build -t vegaprotocol/smartcontracts-base:v1.3.0 .
+docker build -t vegaprotocol/smartcontracts-base:v1.4.0 .
 
 cd ../ganache
-docker build -t vegaprotocol/ganache:v1.3.0 .
+docker build --progress plain -t vegaprotocol/ganache:v1.4.0 .
 
 
-docker run vegaprotocol/ganache:v1.3.0 ganache \
+docker run vegaprotocol/ganache:v1.4.0 ganache \
         --miner.blockTime 0.5 \
         --chain.chainId 1440 \
         --chain.networkId 1441 \

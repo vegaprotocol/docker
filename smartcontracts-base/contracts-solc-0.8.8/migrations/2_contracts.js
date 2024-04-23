@@ -6,6 +6,7 @@ const ethers = require('ethers');
 
 const Base_Faucet_Token = artifacts.require("Base_Faucet_Token");
 const MultisigControl = artifacts.require("MultisigControl");
+const MultisigControlV2 = artifacts.require("MultisigControlV2");
 const ERC20_Asset_Pool = artifacts.require("ERC20_Asset_Pool");
 const ERC20_Bridge_Logic_Restricted = artifacts.require("ERC20_Bridge_Logic_Restricted");
 
@@ -23,7 +24,7 @@ function multisign(
   param_types.push("string");
   let encoded = abi.rawEncode(
     ["bytes", "address"],
-    [abi.rawEncode(param_types, params), sender]
+    [abi.rawEncode(param_types, params), sender] 
   );
   let msg_hash = ethUtil.keccak256(encoded);
   let sigs = "0x";
@@ -86,6 +87,8 @@ async function list_asset_on_bridge(
 module.exports = async function (deployer) {
   // Contracts
   await deployer.deploy(MultisigControl);
+  await deployer.deploy(MultisigControlV2);
+
   await deployer.deploy(ERC20_Asset_Pool, MultisigControl.address);
   let erc20_bridge_1 = await deployer.deploy(
     ERC20_Bridge_Logic_Restricted,
@@ -119,6 +122,7 @@ module.exports = async function (deployer) {
   addresses = {
     addr0: { priv: privkey, pub: pubkey },
     MultisigControl: { Ethereum: MultisigControl.address },
+    MultisigControlV2: { Ethereum: MultisigControl.address },
     ERC20_Asset_Pool: { Ethereum: ERC20_Asset_Pool.address },
     erc20_bridge_1: { Ethereum: erc20_bridge_1.address },
     erc20_bridge_2: { Ethereum: erc20_bridge_2.address },
