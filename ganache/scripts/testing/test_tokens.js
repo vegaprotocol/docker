@@ -10,9 +10,9 @@ const contractOwner = {
 };
 const randomAccount = '0xCcFb83E3b85e70Fd815C2C690B21E48F7170926B';
 
-const vegaAddress = '0x8fa21D653C1bF17741055f00dD55663Bc52a8362';
-const tUSDCEthAddress = '0x1b8a1B6CBE5c93609b46D1829Cc7f3Cb8eeE23a0';
-const tBTCEthAddress = '0xb63D135B0a6854EEb765d69ca36210cC70BECAE0';
+const vegaAddress = '0xFcE3C7CBba976414621887F2D762e7fB0f90b5c1';
+const tUSDCEthAddress = '0x9dFD86Aa69c1ad549568c9d51bf2dB27cbDeF2cD';
+const tBTCEthAddress = '0x67175Da1D5e966e40D11c4B2519392B2058373de';
 
 
 // let w3 = new Web3(new HDWalletProvider([contractOwner.private], "http://127.0.0.1:8545"));
