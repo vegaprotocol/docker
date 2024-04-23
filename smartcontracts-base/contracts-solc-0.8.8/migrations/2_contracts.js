@@ -55,14 +55,15 @@ function multisign_v2(
   params.push(function_name);
   param_types.push("string");
 
-  let encodedTop = abi.rawEncode(
-    ["bytes",                           "address"],
-    [abi.rawEncode(param_types, params), sender] 
-  )
+  const encoded_a = abi.rawEncode(param_types, params);
+  let encoded_b = abi.rawEncode(
+    ["bytes", "address"],
+    [encoded_a, sender] 
+  );
 
   let encoded = abi.solidityPack(
     ["bytes1",  "uint256",   "bytes"],
-    [0x19,      chain_id,    encodedTop] 
+    [0x19,      chain_id,    encoded_b] 
   );
   let msg_hash = ethUtil.keccak256(encoded);
   let sigs = "0x";
@@ -143,13 +144,38 @@ async function list_asset_on_bridge(
   );
 }
 
+async function list_asset_on_bridge_v2(
+  chain_id,
+  bridge_instance,
+  asset_address,
+  cfg,
+  validator_privkeys
+) {
+  // function list_asset(address asset_source, bytes32 vega_asset_id, uint256 lifetime_limit, uint256 withdraw_threshold, uint256 nonce, bytes memory signatures) public virtual;
+  let ms = multisign_v2(
+    chain_id,
+    ["address", "bytes32", "uint256", "uint256"],
+    [asset_address, cfg.vega_id, cfg.lifetime_limit, cfg.withdraw_threshold],
+    "list_asset",
+    bridge_instance.address,
+    validator_privkeys
+  );
+
+  return await bridge_instance.list_asset(
+    asset_address,
+    cfg.vega_id, 
+    cfg.lifetime_limit, 
+    cfg.withdraw_threshold,
+    ms.nonce,
+    ms.sigs
+  );
+}
+
 module.exports = async function (deployer, network) {
   //private RPC endpoint 
   const web3 = new Web3(deployer.provider.host); 
-  const chainId  = parseInt(await web3.eth.getChainId());
-  // console.log(deployer.networks[network])
-  // console.log(chainId)
-  // process.exit(2);
+  const chain_id  = parseInt(await web3.eth.getChainId());
+  
   // Contracts
   await deployer.deploy(MultisigControl);
   await deployer.deploy(MultisigControlV2);
@@ -165,11 +191,12 @@ module.exports = async function (deployer, network) {
     ERC20_Bridge_Logic_Restricted,
     ERC20_Asset_Pool.address
   );
+
+  let ERC20AssetPoolMultisigV2 = await deployer.deploy(ERC20_Asset_Pool, MultisigControlV2.address);;
   let ERC20BridgeMultisigV2 = await deployer.deploy(
     ERC20_Bridge_Logic_Restricted,
-    ERC20_Asset_Pool.address
+    ERC20AssetPoolMultisigV2.address
   );
-  let ERC20AssetPoolMultisigV2 = await deployer.deploy(ERC20_Asset_Pool, MultisigControlV2.address);;
 
   const ganacheMnemonic = process.env.GANACHE_MNEMONIC;
 
@@ -191,7 +218,7 @@ module.exports = async function (deployer, network) {
   );
 
   await erc20_asset_pool_set_bridge_address_v2(
-    chainId,
+    chain_id,
     ERC20AssetPoolMultisigV2,
     ERC20BridgeMultisigV2.address,
     initial_validators
@@ -236,7 +263,21 @@ module.exports = async function (deployer, network) {
         initial_validators
       );
       console.log(
-        `Listed ${token_config[i].symbol} block ${result.receipt.blockNumber} ` +
+        `Listed ${token_config[i].symbol} on bridge with multisig v1 block ${result.receipt.blockNumber} ` +
+          `tx ${result.receipt.transactionHash} gas ${result.receipt.cumulativeGasUsed}`
+      );
+
+
+      result = await list_asset_on_bridge_v2(
+        chain_id,
+        ERC20BridgeMultisigV2,
+        addresses[token_config[i].symbol].Ethereum,
+        token_config[i],
+        initial_validators
+      );
+
+      console.log(
+        `Listed ${token_config[i].symbol}  on bridge with multisig v2 block ${result.receipt.blockNumber} ` +
           `tx ${result.receipt.transactionHash} gas ${result.receipt.cumulativeGasUsed}`
       );
     } catch (e) {
