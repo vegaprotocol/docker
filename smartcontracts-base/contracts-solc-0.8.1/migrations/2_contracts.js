@@ -6,8 +6,11 @@ const Vega_Staking_Bridge = artifacts.require("Vega_Staking_Bridge");
 module.exports = async function (deployer) {
 
 
+  const workDir = process.env.VEGA_CONTRACTS_MIGRATION_WORKDIR || "/app";
+
+
   // should already have addresses deployed from before
-  let rawdata = fs.readFileSync('/app/addresses.json');
+  let rawdata = fs.readFileSync(workDir + '/addresses.json');
   let addresses = JSON.parse(rawdata);
   
   await deployer.deploy(
@@ -33,7 +36,7 @@ module.exports = async function (deployer) {
   // Print and save the address data
   console.log(addresses)
   fs.writeFileSync(
-    "/app/addresses.json",
+    workDir + "/addresses.json",
     JSON.stringify(addresses, null, 2)
   );
 };

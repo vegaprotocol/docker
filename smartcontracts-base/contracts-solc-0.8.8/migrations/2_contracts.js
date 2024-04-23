@@ -171,10 +171,12 @@ module.exports = async function (deployer) {
 
   // New migrations go just above this comment.
 
+  const workDir = process.env.VEGA_CONTRACTS_MIGRATION_WORKDIR || "/app";
+
   // Print and save the address data
   console.log(addresses)
   fs.writeFileSync(
-    "/app/addresses.json",
+    workDir + "/addresses.json",
     JSON.stringify(addresses, null, 2)
   );
 };
