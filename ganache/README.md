@@ -29,6 +29,56 @@ You can find all deployed smartcontracts addresses with the following command:
 docker exec vega-eth-ganache cat /app/addresses.json
 ```
 
+#### Database file to the chain id mapping
+
+To facilitate deployment and testing on different Chain IDs, the project utilizes specific databases mapped to each Chain ID. We must map specific chain id to the database because the multisig smart contract depends on the chain id.
+
+Databases and Chain IDs:
+
+- Primary Database:
+    - Database Path: /app/ganache-db
+    - Chain ID: 1440
+
+- Secondary Database:
+    - Database Path: /app/ganache-db-secondary
+    - Chain ID: 1450
+
+Examples:
+
+1. Start local network with chain id equals 1440:
+
+```shell
+docker run \
+    --detach \
+    -p 8545:8545 \
+    vegaprotocol/ganache:v1.4.0 \
+        --miner.blockTime 0.5 \
+        --chain.chainId 1440 \
+        --chain.networkId 1441 \
+        -h 0.0.0.0 \
+        -p 8545 \
+        --wallet.mnemonic "ozone access unlock valid olympic save include omit supply green clown session" \
+        --database.dbPath /app/ganache-db \
+        --wallet.accountKeysPath keys.json
+```
+
+2. Start local network with chain id equals 1450:
+
+```shell
+docker run \
+    --detach \
+    -p 8545:8545 \
+    vegaprotocol/ganache:v1.4.0 \
+        --miner.blockTime 0.5 \
+        --chain.chainId 1450 \
+        --chain.networkId 1451 \
+        -h 0.0.0.0 \
+        -p 8545 \
+        --wallet.mnemonic "ozone access unlock valid olympic save include omit supply green clown session" \
+        --database.dbPath /app/ganache-db-secondary \
+        --wallet.accountKeysPath keys.json
+```
+
 #### Smartcontracts owner
 
 - ETH Public: `0xEe7D375bcB50C26d52E1A4a472D8822A2A22d94F`
@@ -36,12 +86,20 @@ docker exec vega-eth-ganache cat /app/addresses.json
 
 #### Smartcontracts addresses
 
+*Multisig without chain ID support*:
+
 - MultisigControl: `0xdEcdA30fd3449718304eA201A8f220eBdE25dd1E`
 - ERC20 Asset Pool: `0xAa1eDb6C25e6B5ff2c8EdAf68757Ae557178E6eE`
 - ERC20 Bridge Logic 1: `0x9708FF7510D4A7B9541e1699d15b53Ecb1AFDc54`
 - ERC20 Bridge Logic 2: `0x29e1eA1cfb78f7c34802C90198Cc24aDcBBE4AD0`
 - ERC20 Vesting: `0xF41bD86d462D36b997C0bbb4D97a0a3382f205B7`
 - Staking Bridge: `0x9135f5afd6F055e731bca2348429482eE614CFfA`
+
+*Multisig with chain ID support*:
+
+- Multisig with Chain ID support: `0x879B84eCA313D62CE4e5ED717939B42cBa9e53cb`
+- ERC20 Asset Pool: `0xb63D135B0a6854EEb765d69ca36210cC70BECAE0`
+- ERC20 Bridge Logic: `0x879B84eCA313D62CE4e5ED717939B42cBa9e53cb`
 
 #### ERC20 Tokens
 
