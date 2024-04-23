@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # This script gets contracts set up, then generates contract docs, then serves them.
-
+: "${TRUFFLE_NETWORK:="development"}"
 docs=no
 resume=no
 while true ; do
@@ -23,8 +23,8 @@ done
 if [[ "$resume" = no ]] ; then
     # the 0.8.8 contracts must be deployed first since the VEGA ERC20 token address
     # is needed for the deployment of the staking/vesting contracts
-	(cd contracts-solc-0.8.8 || exit; truffle migrate || exit "$?")
-	(cd contracts-solc-0.8.1 || exit; truffle migrate || exit "$?")
+	(cd contracts-solc-0.8.8 || exit; truffle migrate --network $TRUFFLE_NETWORK || exit "$?")
+	(cd contracts-solc-0.8.1 || exit; truffle migrate --network $TRUFFLE_NETWORK || exit "$?")
 else
 	echo "Resume mode: NOT running truffle migrate"
 fi
