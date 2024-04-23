@@ -3,6 +3,7 @@ const crypto = require("crypto");
 const ethUtil = require("ethereumjs-util");
 const fs = require("fs");
 const ethers = require('ethers');
+const { Web3 } = require('web3');
 
 const Base_Faucet_Token = artifacts.require("Base_Faucet_Token");
 const MultisigControl = artifacts.require("MultisigControl");
@@ -40,12 +41,70 @@ function multisign(
   };
 }
 
+function multisign_v2(
+  chain_id,
+  param_types,
+  params,
+  function_name,
+  sender,
+  validator_privkeys
+) {
+  let nonce = new ethUtil.BN(crypto.randomBytes(32));
+  params.push(nonce);
+  param_types.push("uint256");
+  params.push(function_name);
+  param_types.push("string");
+
+  let encodedTop = abi.rawEncode(
+    ["bytes",                           "address"],
+    [abi.rawEncode(param_types, params), sender] 
+  )
+
+  let encoded = abi.solidityPack(
+    ["bytes1",  "uint256",   "bytes"],
+    [0x19,      chain_id,    encodedTop] 
+  );
+  let msg_hash = ethUtil.keccak256(encoded);
+  let sigs = "0x";
+  for (let privkey of validator_privkeys) {
+    let sig = ethUtil.ecsign(msg_hash, privkey);
+    sigs += sig.r.toString("hex");
+    sigs += sig.s.toString("hex");
+    sigs += sig.v.toString(16);
+  }
+  return {
+    nonce: nonce,
+    sigs: sigs,
+  };
+}
+
 async function erc20_asset_pool_set_bridge_address(
   erc20_asset_pool_instance,
   bridge_address,
   validator_privkeys // list
 ) {
   let ms = multisign(
+    ["address"],
+    [bridge_address],
+    "set_bridge_address",
+    erc20_asset_pool_instance.address,
+    validator_privkeys
+  );
+  await erc20_asset_pool_instance.set_bridge_address(
+    bridge_address,
+    ms.nonce,
+    ms.sigs
+  );
+}
+
+async function erc20_asset_pool_set_bridge_address_v2(
+  chain_id,
+  erc20_asset_pool_instance,
+  bridge_address,
+  validator_privkeys // list
+) {
+  let ms = multisign_v2(
+    chain_id,
     ["address"],
     [bridge_address],
     "set_bridge_address",
@@ -84,12 +143,20 @@ async function list_asset_on_bridge(
   );
 }
 
-module.exports = async function (deployer) {
+module.exports = async function (deployer, network) {
+  //private RPC endpoint 
+  const web3 = new Web3(deployer.provider.host); 
+  const chainId  = parseInt(await web3.eth.getChainId());
+  // console.log(deployer.networks[network])
+  // console.log(chainId)
+  // process.exit(2);
   // Contracts
   await deployer.deploy(MultisigControl);
   await deployer.deploy(MultisigControlV2);
 
   await deployer.deploy(ERC20_Asset_Pool, MultisigControl.address);
+  let erc20_asset_pool_instance = await ERC20_Asset_Pool.deployed();
+
   let erc20_bridge_1 = await deployer.deploy(
     ERC20_Bridge_Logic_Restricted,
     ERC20_Asset_Pool.address
@@ -98,16 +165,20 @@ module.exports = async function (deployer) {
     ERC20_Bridge_Logic_Restricted,
     ERC20_Asset_Pool.address
   );
-  let erc20_asset_pool_instance = await ERC20_Asset_Pool.deployed();
+  let ERC20BridgeMultisigV2 = await deployer.deploy(
+    ERC20_Bridge_Logic_Restricted,
+    ERC20_Asset_Pool.address
+  );
+  let ERC20AssetPoolMultisigV2 = await deployer.deploy(ERC20_Asset_Pool, MultisigControlV2.address);;
 
-  const ganmacheMnemonic = process.env.GANACHE_MNEMONIC;
+  const ganacheMnemonic = process.env.GANACHE_MNEMONIC;
 
-  if (!ganmacheMnemonic || ganmacheMnemonic.length <= 0) {
+  if (!ganacheMnemonic || ganacheMnemonic.length <= 0) {
     console.log("Error: GANACHE_MNEMONIC env variable not set.")
     process.exit(2);
   }
 
-  const wallet = ethers.Wallet.fromPhrase(ganmacheMnemonic)
+  const wallet = ethers.Wallet.fromPhrase(ganacheMnemonic)
   let privkey = wallet.privateKey.substr(2);
   let pubkey = wallet.address;
 
@@ -119,14 +190,24 @@ module.exports = async function (deployer) {
     initial_validators
   );
 
+  await erc20_asset_pool_set_bridge_address_v2(
+    chainId,
+    ERC20AssetPoolMultisigV2,
+    ERC20BridgeMultisigV2.address,
+    initial_validators
+  );
+
   addresses = {
     addr0: { priv: privkey, pub: pubkey },
     MultisigControl: { Ethereum: MultisigControl.address },
     MultisigControlV2: { Ethereum: MultisigControl.address },
+    ERC20BridgeMultisigV2: {Ethereum: ERC20BridgeMultisigV2.address },
+    ERC20AssetPoolMultisigV2: {Ethereum: ERC20AssetPoolMultisigV2.address },
     ERC20_Asset_Pool: { Ethereum: ERC20_Asset_Pool.address },
     erc20_bridge_1: { Ethereum: erc20_bridge_1.address },
     erc20_bridge_2: { Ethereum: erc20_bridge_2.address },
   };
+
 
   // Tokens
   let token_config = require("./token_config.json");
