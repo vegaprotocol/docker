@@ -109,7 +109,6 @@ contract MultisigControlV2 is IMultisigControl {
 
         uint256 size = 0;
         address[] memory signers_temp = new address[](signatures.length / 65);
-        uint256 min_signer_threshold = uint256(signer_count) * threshold;
 
         bytes32 message_hash = keccak256(abi.encodePacked(bytes1(0x19), block.chainid, abi.encode(message, msg.sender)));
         uint256 offset;
@@ -151,12 +150,12 @@ contract MultisigControlV2 is IMultisigControl {
                 size++;
             }
 
-            if (size * 1000 > min_signer_threshold) {
+            if ((size * 1000) / uint256(signer_count) > threshold) {
                 break;
             }
         }
 
-        used_nonces[nonce] = ((uint256(size) * 1000) / (uint256(signer_count))) > threshold;
+        used_nonces[nonce] = ((size * 1000) / uint256(signer_count)) > threshold;
         return used_nonces[nonce];
     }
 
