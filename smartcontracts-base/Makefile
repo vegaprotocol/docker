@@ -1,7 +1,7 @@
 # Makefile
 
 #defauls
-VERSION=0.8.8
+VERSION=0.8.13
 
 .PHONY: default
 default: abi
@@ -25,10 +25,3 @@ abi:
 		jq --sort-keys . <"$$abifile" >"$${abifile%.abi}_ABI.json" && rm "$$abifile" ; \
 	done
 
-.PHONY: abi-0.8.8
-abi-0.8.8: VERSION=0.8.8
-abi-0.8.8: abi
-
-.PHONY: abi-0.8.1
-abi-0.8.1: VERSION=0.8.1
-abi-0.8.1: abi

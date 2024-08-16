@@ -3,7 +3,7 @@ const Web3 = require("web3");
 var assert = require('assert');
 
 
-let abi = require("./../../../smartcontracts-base/contracts-solc-0.8.8/build/doc/data/files/abi/Base_Faucet_Token_ABI.json");
+let abi = require("./../../../smartcontracts-base/contracts-solc-0.8.13/build/doc/data/files/abi/Base_Faucet_Token_ABI.json");
 const contractOwner = {
     'private': 'a37f4c2a678aefb5037bf415a826df1540b330b7e471aa54184877ba901b9ef0',
     'public': '0xEe7D375bcB50C26d52E1A4a472D8822A2A22d94F'
@@ -11,7 +11,7 @@ const contractOwner = {
 const randomAccount = '0xCcFb83E3b85e70Fd815C2C690B21E48F7170926B';
 
 const vegaAddress = '0xFcE3C7CBba976414621887F2D762e7fB0f90b5c1';
-const tUSDCEthAddress = '0x9dFD86Aa69c1ad549568c9d51bf2dB27cbDeF2cD';
+const tUSDCEthAddress = '0x1b8a1B6CBE5c93609b46D1829Cc7f3Cb8eeE23a0';
 const tBTCEthAddress = '0x67175Da1D5e966e40D11c4B2519392B2058373de';
 
 
