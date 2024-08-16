@@ -34,25 +34,3 @@ nohup \
         GANACHE_HOSTNAME="127.0.0.1" \
         TRUFFLE_NETWORK="development" \
         GANACHE_PORT="${GANACHE_PORT}" ./run
-
-
-sleep 5;
-echo "###################################################################";
-echo "#                                                                 #";
-echo "#     RUNNING MIGRATIONS FOR SECONDARY GANACHE                    #";
-echo "#                                                                 #";
-echo "###################################################################";
-
-nohup \
-        bash -c "node /app/dist/node/cli.js\
-            --miner.blockTime 1 \
-            --chain.chainId 1450 \
-            --chain.networkId 1451 \
-            --wallet.mnemonic \"${GANACHE_MNEMONIC}\" \
-            --database.dbPath /app/ganache-db-secondary \
-            -h 0.0.0.0 \
-            -p \"${GANACHE_PORT_SECONDARY}\" &" \
-    && GANACHE_MNEMONIC="${GANACHE_MNEMONIC}" \
-        GANACHE_HOSTNAME="127.0.0.1" \
-        TRUFFLE_NETWORK="secondary" \
-        GANACHE_PORT="${GANACHE_PORT_SECONDARY}" ./run
