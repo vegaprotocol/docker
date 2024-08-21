@@ -5,6 +5,7 @@ const fs = require("fs");
 const ethers = require('ethers');
 const { Web3 } = require('web3');
 
+const ERC20_Vesting = artifacts.require("ERC20_Vesting");
 const Vega_Staking_Bridge = artifacts.require("StakingBridge");
 const Base_Faucet_Token = artifacts.require("Base_Faucet_Token");
 const MultisigControl = artifacts.require("MultisigControl");
@@ -151,8 +152,8 @@ module.exports = async function (deployer, network) {
 
   const web3 = new Web3(deployer.provider.host); 
   const chain_id  = parseInt(await web3.eth.getChainId());
-  
-  // Contracts
+
+
   await deployer.deploy(MultisigControl);
 
   await deployer.deploy(ERC20_Asset_Pool, MultisigControl.address);
@@ -254,6 +255,16 @@ module.exports = async function (deployer, network) {
     );
   
   addresses["staking_bridge"] = { Ethereum: Vega_Staking_Bridge.address };
+
+  await deployer.deploy(
+    ERC20_Vesting,
+    addresses["VEGA"].Ethereum,
+    addresses["VEGA"].Ethereum,
+    [],
+    []
+  );
+  
+  addresses["erc20_vesting"] = { Ethereum: ERC20_Vesting.address };
 
   // New migrations go just above this comment.
 
