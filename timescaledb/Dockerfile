@@ -1,5 +1,5 @@
 # FROM postgres:14-bullseye
-FROM timescale/timescaledb:2.15.3-pg16
+FROM timescale/timescaledb-ha:pg16.3-ts2.15.3-all
 
 ENV TIMESCALEDB_TELEMETRY "off"
 ENV NO_TS_TUNE true
@@ -11,7 +11,7 @@ ENV POSTGRES_PASSWORD "vega"
 COPY ./init-db.sh /init-db.sh
 COPY 020_add_multiple_databases.sh /docker-entrypoint-initdb.d/
 
-RUN apk add sudo \
+RUN apt-get sudo \
     && sudo -u postgres --preserve-env /init-db.sh
 RUN timescaledb-tune \
         --yes \
